@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hmv_care_app/app/modules/home/home_controller.dart';
+import 'package:hmv_care_app/core/utils/constants.dart';
 import 'package:sizer/sizer.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -52,19 +53,18 @@ class PacientesTab extends GetView<HomeController> {
                       runSpacing: 10,
                       verticalDirection: VerticalDirection.down,
                       children: [
-                        HomeMenuItem('Questionário Emergência', () async {
+                        HomeMenuItem('Solicitar Emergência', () async {
                           await controller.openEmergencia();
                         }, 'https://img.icons8.com/cotton/344/medical-mobile-app-2.png'),
                         HomeMenuItem('Histórico de Atendimento', () {},
                             'https://img.icons8.com/cotton/344/medical-history.png'),
                         HomeMenuItem('Exames Realizados', () {},
                             'https://img.icons8.com/cotton/344/folder-invoices--v2.png'),
-                        HomeMenuItem('Chamar Ambulância', () {},
-                            'https://img.icons8.com/offices/344/ambulance.png'),
                         HomeMenuItem('Hospitais Próximos', () {},
                             'https://img.icons8.com/cotton/344/clinic.png'),
-                        HomeMenuItem('Hábitos & Saúde', () {},
-                            'https://img.icons8.com/cotton/344/heart-monitor.png'),
+                        HomeMenuItem('Hábitos & Saúde', () async {
+                          await controller.openHabitos();
+                        }, 'https://img.icons8.com/cotton/344/heart-monitor.png'),
                       ],
                     )
                   ],
@@ -90,7 +90,7 @@ class PacientesTab extends GetView<HomeController> {
             child: ClipOval(
                 child: FadeInImage.memoryNetwork(
               placeholder: kTransparentImage,
-              image: 'https://100k-faces.glitch.me/random-image',
+              image: controller.user.foto ?? Constants.DEFAULT_PROFILE_PIC,
               fit: BoxFit.cover,
             )),
           ),

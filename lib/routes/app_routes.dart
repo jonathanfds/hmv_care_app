@@ -5,5 +5,6 @@ abstract class AppRoutes {
   static const HOME = '/home';
   static const LOGIN = '/login';
   static const REGISTER = '/register';
-  static const EMERGENCIA = '/emergencia';
+  static const SOLICITAR_EMERGENCIA = '/solicitar_emergencia';
+  static const HABITOS_SAUDE = '/habitossaude';
 }

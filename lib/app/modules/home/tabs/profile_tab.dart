@@ -3,10 +3,11 @@ import 'package:get/get.dart';
 import 'package:hmv_care_app/core/theme/app_colors.dart';
 import 'package:hmv_care_app/core/theme/app_text_styles.dart';
 import 'package:sizer/sizer.dart';
+import '../home_controller.dart';
 import '../widgets/topbar.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class ProfileTab extends StatelessWidget {
+class ProfileTab extends GetView<HomeController> {
   const ProfileTab({Key? key}) : super(key: key);
 
   _buildLabelText(String label, String value) {
@@ -51,7 +52,7 @@ class ProfileTab extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: Colors.black54, width: 1)),
                       child: QrImage(
-                        data: 'https://100k-faces.glitch.me/random-image',
+                        data: 'URL',
                         version: QrVersions.auto,
                         size: 220,
                         gapless: false,
@@ -93,28 +94,21 @@ class ProfileTab extends StatelessWidget {
                               )
                             ],
                           ),
-                          _buildLabelText('Nome', 'Gabriele Guedes'),
-                          _buildLabelText('Data Nascimento', '04/12/1990'),
+                          _buildLabelText('Nome', controller.user.name!),
+                          _buildLabelText(
+                              'Data Nascimento', controller.user.dtNascimento!),
                           Wrap(
                             spacing: 10,
                             children: [
-                              _buildLabelText('CPF', '482.555.896-52'),
-                              _buildLabelText('RG', '38.159.741-5'),
+                              _buildLabelText('CPF',
+                                  controller.formatCPF(controller.user.cpf!)),
                             ],
                           ),
-                          const Divider(
-                              thickness: 0.5,
-                              endIndent: 0,
-                              color: AppColors.blue),
-                          _buildLabelText('Endereço',
-                              'R. Ramiro Barcelos, 910 - Moinhos de Vento'),
-                          Wrap(
-                            spacing: 10,
-                            children: [
-                              _buildLabelText('Cidade', 'Porto Alegre'),
-                              _buildLabelText('Estado', 'RS'),
-                            ],
-                          )
+                          _buildLabelText('E-mail', controller.user.email!),
+                          _buildLabelText(
+                              'Telefone', controller.user.telefone!),
+                          _buildLabelText(
+                              'Endereço', controller.user.endereco!),
                         ],
                       ),
                     ),

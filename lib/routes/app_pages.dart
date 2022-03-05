@@ -1,7 +1,10 @@
 import 'package:get/get.dart';
-import 'package:hmv_care_app/app/modules/emergencia/emergencia_binding.dart';
-import 'package:hmv_care_app/app/modules/emergencia/emergencia_page.dart';
-import 'package:hmv_care_app/routes/auth_guard.dart';
+
+import '../app/modules/emergencia/solicitar_emergencia_binding.dart';
+import '../app/modules/emergencia/solicitar_emergencia_page.dart';
+import '../app/modules/habitos/habitos_page.dart';
+import '../routes/auth_guard.dart';
+import '../app/modules/habitos/habitos_binding.dart';
 import '../app/modules/home/home_binding.dart';
 import '../app/modules/home/home_page.dart';
 import '../app/modules/login/login_binding.dart';
@@ -30,9 +33,15 @@ abstract class AppPages {
       middlewares: [AuthGuard()],
     ),
     GetPage(
-      name: AppRoutes.EMERGENCIA,
-      page: () => EmergenciaPage(),
-      binding: EmergenciaBinding(),
+      name: AppRoutes.SOLICITAR_EMERGENCIA,
+      page: () => SolicitarEmergenciaPage(),
+      binding: SolicitarEmergenciaBinding(),
+      middlewares: [AuthGuard()],
+    ),
+    GetPage(
+      name: AppRoutes.HABITOS_SAUDE,
+      page: () => HabitosPage(),
+      binding: HabitosBinding(),
       middlewares: [AuthGuard()],
     ),
   ];

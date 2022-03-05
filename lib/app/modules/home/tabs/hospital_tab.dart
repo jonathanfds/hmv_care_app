@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hmv_care_app/app/data/models/emergencia.dart';
 import 'package:hmv_care_app/app/modules/home/home_controller.dart';
-import 'package:hmv_care_app/app/widgets/custom_formfield.dart';
 import 'package:hmv_care_app/core/theme/app_colors.dart';
 import 'package:sizer/sizer.dart';
-import 'package:transparent_image/transparent_image.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../data/models/paciente.dart';
-import '../widgets/menu_item.dart';
-import '../widgets/paciente_tile.dart';
 import '../widgets/topbar.dart';
 
 class HospitalTab extends GetView<HomeController> {
@@ -20,74 +17,305 @@ class HospitalTab extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    Widget _builLabel(String label, String value,
+        {Axis direction = Axis.vertical}) {
+      return Wrap(
+          alignment: WrapAlignment.start,
+          spacing: 5,
+          direction: direction,
+          children: [
+            Text(
+              label,
+              style: KTextStyle.labelTextStyle,
+            ),
+            Text(
+              value,
+              overflow: TextOverflow.ellipsis,
+              style: KTextStyle.textFieldHeading,
+            )
+          ]);
+    }
+
     Widget buildBody() {
       return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text('Lista de Pacientes', style: KTextStyle.headerTextStyle),
-            CustomFormField(
-                headingText: '',
-                onSubmitt: (text) {
-                  var list = controller.allPacientes
-                      .where((t) =>
-                          t.cpf!.toLowerCase().startsWith(text
-                              .toLowerCase()
-                              .replaceAll('-', '')
-                              .replaceAll('.', '')) ||
-                          t.email!.toLowerCase().startsWith(text.toLowerCase()))
-                      .toList();
-                  controller.pacientes.value = list;
-                },
-                hintText: 'Buscar por CPF ou Email',
-                obsecureText: false,
-                suffixIcon: SizedBox(),
-                textInputType: TextInputType.number,
-                textInputAction: TextInputAction.search,
-                controller: _searchBarController,
-                maxLines: 1),
-            SizedBox(height: 20),
-            SingleChildScrollView(
-                child: Obx(
-              () => DataTable(
-                  dataRowHeight: 60,
-                  columns: const [
-                    DataColumn(label: Text('')),
-                    DataColumn(label: Text('Nome')),
-                    DataColumn(label: Text('CPF')),
-                    DataColumn(label: Text('Email')),
-                    DataColumn(label: Text('Nascimento')),
-                    DataColumn(label: Text('Telefone')),
-                    DataColumn(label: Text('')),
-                    DataColumn(label: Text(''))
-                  ],
-                  rows: controller.pacientes.map((t) {
-                    var paciente = t as Paciente;
-                    return DataRow(cells: [
-                      DataCell(Container(
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        child: const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              'https://100k-faces.glitch.me/random-image'),
-                          radius: 30,
-                        ),
-                      )),
-                      DataCell(Text(paciente.nomeCompleto!)),
-                      DataCell(Text(controller.formatCPF(paciente.cpf!))),
-                      DataCell(Text(paciente.email!)),
-                      DataCell(Text(paciente.dataNascimento!)),
-                      DataCell(Text(controller.formatTelefone(
-                          paciente.telefone!.replaceAll('+55', '')))),
-                      DataCell(IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.medical_services_rounded))),
-                      DataCell(IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.medical_services_rounded)))
-                    ]);
-                  }).toList()),
-            ))
+            const Text('Emergências', style: KTextStyle.headerTextStyle),
+            const SizedBox(height: 15),
+            Row(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      height: 75.h,
+                      child: Obx(() => ListView(
+                              children: controller.emergencias.map((t) {
+                            var emergencia = t as Emergencia;
+                            var isSelected = emergencia.id ==
+                                controller.selectedEmergencia.id;
+                            var color = emergencia.severidade == "Grave"
+                                ? Colors.red
+                                : Colors.blue;
+                            return InkWell(
+                              onTap: () {
+                                controller.selectedEmergenciaIdx =
+                                    controller.emergencias.indexOf(t);
+                              },
+                              child: Card(
+                                  elevation: 5,
+                                  shadowColor: color,
+                                  child: Container(
+                                      padding: const EdgeInsets.only(left: 7),
+                                      color: color,
+                                      child: Obx(() => Container(
+                                            color: controller
+                                                            .selectedEmergenciaIdx >=
+                                                        0 &&
+                                                    emergencia.id ==
+                                                        controller
+                                                            .selectedEmergencia
+                                                            .id
+                                                ? Colors.blue[50]
+                                                : Colors.white,
+                                            padding: const EdgeInsets.all(8),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'Severidade',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style:
+                                                      KTextStyle.labelTextStyle,
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                  emergencia.severidade!,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: KTextStyle
+                                                      .textFieldHeading,
+                                                ),
+                                                const SizedBox(height: 15),
+                                                const Text(
+                                                  'Data de Solicitação',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style:
+                                                      KTextStyle.labelTextStyle,
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                  emergencia.data!,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: KTextStyle
+                                                      .textFieldHeading,
+                                                ),
+                                              ],
+                                            ),
+                                          )))),
+                            );
+                          }).toList())),
+                    )),
+                Expanded(
+                    flex: 8,
+                    child: SizedBox(
+                        height: 75.h,
+                        child: Obx(() => controller.selectedEmergenciaIdx >= 0
+                            ? Card(
+                                elevation: 5,
+                                child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 15),
+                                    child: ListView(
+                                      children: [
+                                        const Text(
+                                          'Dados do Paciente',
+                                          style: KTextStyle.titleTextStyle,
+                                        ),
+                                        Divider(
+                                            color: Colors.grey[200],
+                                            thickness: .5),
+                                        const SizedBox(height: 10),
+                                        Wrap(
+                                          spacing: 50,
+                                          runSpacing: 10,
+                                          children: [
+                                            _builLabel(
+                                                'Nome Completo',
+                                                controller.selectedEmergencia
+                                                    .paciente!.nomeCompleto!),
+                                            _builLabel('Idade',
+                                                '${controller.selectedEmergencia.paciente!.idade} anos'),
+                                            _builLabel(
+                                                'CPF',
+                                                controller.formatCPF(controller
+                                                    .selectedEmergencia
+                                                    .paciente!
+                                                    .cpf!)),
+                                            _builLabel(
+                                                'Nome da Mãe',
+                                                controller.selectedEmergencia
+                                                    .paciente!.nomeMae!),
+                                            _builLabel(
+                                                'Nascimento',
+                                                controller.selectedEmergencia
+                                                    .paciente!.dataNascimento!),
+                                            _builLabel(
+                                                'Telefone',
+                                                controller.formatTelefone(
+                                                    controller
+                                                        .selectedEmergencia
+                                                        .paciente!
+                                                        .telefone!)),
+                                            _builLabel(
+                                                'E-mail',
+                                                controller.selectedEmergencia
+                                                    .paciente!.email!),
+                                            _builLabel(
+                                                'Endereço',
+                                                controller.selectedEmergencia
+                                                    .paciente!.endereco!),
+                                            _builLabel(
+                                                'Convênio',
+                                                controller.selectedEmergencia
+                                                    .paciente!.convenio!),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 30),
+                                        Text(
+                                          'Dados Médicos',
+                                          style: KTextStyle.titleTextStyle
+                                              .copyWith(fontSize: 15),
+                                        ),
+                                        Divider(
+                                            color: Colors.grey[200],
+                                            thickness: .5),
+                                        const SizedBox(height: 10),
+                                        Wrap(
+                                            spacing: 50,
+                                            runSpacing: 10,
+                                            children: [
+                                              _builLabel(
+                                                  'Peso',
+                                                  controller.selectedEmergencia
+                                                          .paciente?.peso ??
+                                                      'Não Informado'),
+                                              _builLabel(
+                                                  'Altura',
+                                                  controller.selectedEmergencia
+                                                          .paciente?.altura ??
+                                                      'Não Informado'),
+                                              _builLabel(
+                                                  'Fumante',
+                                                  controller
+                                                              .selectedEmergencia
+                                                              .paciente
+                                                              ?.fumante !=
+                                                          null
+                                                      ? controller
+                                                              .selectedEmergencia
+                                                              .paciente!
+                                                              .fumante!
+                                                          ? 'Sim'
+                                                          : 'Não'
+                                                      : 'Não Informado'),
+                                              _builLabel(
+                                                  'Consome bebida alcoólica',
+                                                  controller
+                                                              .selectedEmergencia
+                                                              .paciente
+                                                              ?.bebidaAlcoolica !=
+                                                          null
+                                                      ? controller
+                                                              .selectedEmergencia
+                                                              .paciente!
+                                                              .bebidaAlcoolica!
+                                                          ? 'Sim'
+                                                          : 'Não'
+                                                      : 'Não Informado'),
+                                              _builLabel(
+                                                  'Possui familiares cardíacos',
+                                                  controller
+                                                              .selectedEmergencia
+                                                              .paciente
+                                                              ?.possuiHistoricoCardiaco !=
+                                                          null
+                                                      ? controller
+                                                              .selectedEmergencia
+                                                              .paciente!
+                                                              .possuiHistoricoCardiaco!
+                                                          ? 'Sim'
+                                                          : 'Não'
+                                                      : 'Não Informado'),
+                                              _builLabel(
+                                                  'Alergia aos Remédios',
+                                                  controller
+                                                              .selectedEmergencia
+                                                              .paciente!
+                                                              .remediosAlergia ==
+                                                          ''
+                                                      ? 'Nenhum'
+                                                      : controller
+                                                          .selectedEmergencia
+                                                          .paciente!
+                                                          .remediosAlergia!),
+                                              _builLabel(
+                                                  'Remédios Controlados',
+                                                  controller
+                                                              .selectedEmergencia
+                                                              .paciente!
+                                                              .remediosControlados ==
+                                                          ''
+                                                      ? 'Nenhum'
+                                                      : controller
+                                                          .selectedEmergencia
+                                                          .paciente!
+                                                          .remediosControlados!),
+                                              if (controller.selectedEmergencia
+                                                      .paciente!.observacoes! !=
+                                                  '')
+                                                _builLabel(
+                                                    'Observações',
+                                                    controller
+                                                        .selectedEmergencia
+                                                        .paciente!
+                                                        .observacoes!),
+                                            ]),
+                                        const SizedBox(height: 30),
+                                        const Text(
+                                          'Questionário da Emêrgencia',
+                                          style: KTextStyle.titleTextStyle,
+                                        ),
+                                        Divider(
+                                            color: Colors.grey[200],
+                                            thickness: .5),
+                                        const SizedBox(height: 10),
+                                        Wrap(
+                                            alignment: WrapAlignment.start,
+                                            direction: Axis.vertical,
+                                            spacing: 10,
+                                            children: controller
+                                                .selectedEmergencia
+                                                .questionario!
+                                                .entries
+                                                .map((e) => _builLabel(
+                                                    e.key, e.value,
+                                                    direction: Axis.horizontal))
+                                                .toList())
+                                      ],
+                                    )),
+                              )
+                            : Container())))
+              ],
+            )
           ],
         ),
       );
@@ -100,7 +328,7 @@ class HospitalTab extends GetView<HomeController> {
         child: SafeArea(
             child: Stack(
           children: [
-            Positioned(
+            const Positioned(
               child: HMVTopbar(),
               top: 10,
               left: 10,
@@ -118,7 +346,7 @@ class HospitalTab extends GetView<HomeController> {
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40),
                     )),
-                child: buildBody(),
+                child: SingleChildScrollView(child: buildBody()),
               ),
             )
           ],
@@ -157,7 +385,7 @@ class MyData extends DataTableSource {
       DataCell(Text(paciente.dataNascimento!)),
       DataCell(Text((paciente.telefone!))),
       DataCell(IconButton(
-          onPressed: () {}, icon: Icon(Icons.medical_services_rounded)))
+          onPressed: () {}, icon: const Icon(Icons.medical_services_rounded)))
     ]);
   }
 }

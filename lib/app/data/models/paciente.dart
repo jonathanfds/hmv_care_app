@@ -5,30 +5,35 @@
 import 'dart:convert';
 
 import 'package:hmv_care_app/app/data/models/base_model.dart';
+import 'package:intl/intl.dart';
 
 Paciente PacienteFromJson(String str) => Paciente.fromJson(json.decode(str));
 
 String PacienteToJson(Paciente data) => json.encode(data.toJson());
 
 class Paciente implements IBaseModel {
-  Paciente({
-    required this.id,
-    this.observacoes,
-    this.telefone,
-    this.fumante,
-    this.convenio,
-    this.possuiHistoricoCardiaco,
-    this.email,
-    this.quaisRemedios,
-    this.usaRemedioControlado,
-    this.plano,
-    this.dataNascimento,
-    this.cpf,
-    this.nomeMae,
-    this.endereco,
-    this.sedentarismo,
-    this.nomeCompleto,
-  });
+  Paciente(
+      {required this.id,
+      this.observacoes,
+      this.telefone,
+      this.fumante,
+      this.convenio,
+      this.possuiHistoricoCardiaco,
+      this.email,
+      this.remediosAlergia,
+      this.remediosControlados,
+      this.plano,
+      this.dataNascimento,
+      this.cpf,
+      this.nomeMae,
+      this.endereco,
+      this.atividadeFisica,
+      this.nomeCompleto,
+      this.doencas,
+      this.peso,
+      this.altura,
+      this.bebidaAlcoolica,
+      this.ultimaAtualizacao});
   @override
   String id;
   String? observacoes;
@@ -37,15 +42,25 @@ class Paciente implements IBaseModel {
   String? convenio;
   bool? possuiHistoricoCardiaco;
   String? email;
-  String? quaisRemedios;
-  bool? usaRemedioControlado;
+  String? remediosAlergia;
+  String? remediosControlados;
   String? plano;
   String? dataNascimento;
   String? cpf;
   String? nomeMae;
   String? endereco;
-  bool? sedentarismo;
+  String? atividadeFisica;
   String? nomeCompleto;
+  String? ultimaAtualizacao;
+  String? doencas;
+  String? peso;
+  String? altura;
+  bool? bebidaAlcoolica;
+  String get idade {
+    var dtNasci = DateFormat('dd/MM/yyyy').parse(dataNascimento!);
+    final difference = DateTime.now().difference(dtNasci).inDays ~/ 365;
+    return difference.toString();
+  }
 
   factory Paciente.fromJson(Map<String, dynamic> json) => Paciente(
         observacoes: json["observacoes"],
@@ -54,16 +69,21 @@ class Paciente implements IBaseModel {
         convenio: json["convenio"],
         possuiHistoricoCardiaco: json["possui_historico_cardiaco"],
         email: json["email"],
-        quaisRemedios: json["quais_remedios"],
-        usaRemedioControlado: json["usa_remedio_controlado"],
+        remediosAlergia: json["remedios_alergia"],
+        remediosControlados: json["remedios_controlados"],
         plano: json["plano"],
+        peso: json["peso"],
+        altura: json["altura"],
         dataNascimento: json["data_nascimento"],
         cpf: json["cpf"],
         nomeMae: json["nome_mae"],
         endereco: json["endereco"],
-        sedentarismo: json["sedentarismo"],
+        atividadeFisica: json["atividade_fisica"],
         id: json["id"],
+        ultimaAtualizacao: json["ultima_atualizacao"],
         nomeCompleto: json["nome_completo"],
+        doencas: json["doencas"],
+        bebidaAlcoolica: json["bebida_alcoolica"],
       );
 
   @override
@@ -74,16 +94,21 @@ class Paciente implements IBaseModel {
         "convenio": convenio,
         "possui_historico_cardiaco": possuiHistoricoCardiaco,
         "email": email,
-        "quais_remedios": quaisRemedios,
-        "usa_remedio_controlado": usaRemedioControlado,
+        "remedios_alergia": remediosAlergia,
+        "remedios_controlados": remediosControlados,
         "plano": plano,
+        "peso": peso,
+        "altura": altura,
         "data_nascimento": dataNascimento,
         "cpf": cpf,
         "nome_mae": nomeMae,
         "endereco": endereco,
-        "sedentarismo": sedentarismo,
+        "atividade_fisica": atividadeFisica,
         "id": id,
         "nome_completo": nomeCompleto,
+        "doencas": doencas,
+        "ultima_atualizacao": ultimaAtualizacao,
+        "bebida_alcoolica": bebidaAlcoolica,
       };
 
   @override
@@ -94,14 +119,19 @@ class Paciente implements IBaseModel {
         "convenio": {"Value": convenio},
         "possui_historico_cardiaco": {"Value": possuiHistoricoCardiaco},
         "email": {"Value": email},
-        "quais_remedios": {"Value": quaisRemedios},
-        "usa_remedio_controlado": {"Value": usaRemedioControlado},
+        "remedios_alergia": {"Value": remediosAlergia},
+        "remedios_controlados": {"Value": remediosControlados},
         "plano": {"Value": plano},
         "data_nascimento": {"Value": dataNascimento},
         "cpf": {"Value": cpf},
+        "peso": {"Value": peso},
+        "altura": {"Value": altura},
         "nome_mae": {"Value": nomeMae},
         "endereco": {"Value": endereco},
-        "sedentarismo": {"Value": sedentarismo},
+        "atividade_fisica": {"Value": atividadeFisica},
         "nome_completo": {"Value": nomeCompleto},
+        "doencas": {"Value": doencas},
+        "ultima_atualizacao": {"Value": ultimaAtualizacao},
+        "bebida_alcoolica": {"Value": bebidaAlcoolica},
       };
 }

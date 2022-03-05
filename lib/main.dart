@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hmv_care_app/app/data/services/interfaces/authentication_service.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'app/data/services/authentication/amplify_auth_service.dart';
 import 'app/data/services/authentication/api_auth_service.dart';
 import 'app/features/authentication/authentication_controller.dart';
@@ -33,6 +35,8 @@ main() async {
 
   //Removes the SplashScreen
   FlutterNativeSplash.remove();
+  Intl.defaultLocale = 'pt_BR';
+  initializeDateFormatting('pt_BR', null);
   runApp(const MyApp());
 }
 

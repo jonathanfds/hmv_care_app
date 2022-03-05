@@ -28,7 +28,6 @@ class DataStorageRepositoryApi {
       var response =
           await httpClient.get('/storage?TableName=$tableName&id=$id');
       if (response.statusCode == 200) {
-        print(response.data);
         return response.data["Item"];
       } else
         print('erro -get');

@@ -7,3 +7,8 @@ class AppConfig {
   static const API_ENDPOINT =
       "https://urmm2wv29f.execute-api.us-east-2.amazonaws.com/dev";
 }
+
+class Constants {
+  static const DEFAULT_PROFILE_PIC =
+      'https://www.clipartkey.com/mpngs/m/198-1988954_staff-profile-photo-facebook-blank-profile-picture-male.png';
+}

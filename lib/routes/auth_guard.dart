@@ -19,7 +19,11 @@ class AuthGuard extends GetMiddleware {
     bool isAuthenticated = authController.state is Authenticated;
 
     if (!isAuthenticated || route == AppRoutes.LOGIN) {
-      return RouteSettings(name: AppRoutes.LOGIN);
+      return RouteSettings(
+          name: AppRoutes.LOGIN,
+          arguments: route != AppRoutes.LOGIN
+              ? {'returnUrl': route}
+              : {'returnUrl': AppRoutes.INITIAL});
     }
     return null;
   }

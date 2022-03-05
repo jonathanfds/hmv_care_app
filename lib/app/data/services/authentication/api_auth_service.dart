@@ -89,13 +89,27 @@ class ApiAuthService extends GetxService implements IAuthenticationService {
 
     Map<String, dynamic> payLoad = session!.getIdToken().decodePayload();
     List<String> groups = List<String>.from(payLoad['cognito:groups']);
+
     User user = User(
         username: username!,
-        userId: attributes.firstWhere((t) => t.getName() == 'sub').value,
-        email: attributes.firstWhere((t) => t.getName() == 'email').value,
-        name: attributes.firstWhere((t) => t.getName() == 'name').value,
+        userId: getAttribute(attributes, 'sub'),
+        cpf: getAttribute(attributes, 'custom:cpf'),
+        email: getAttribute(attributes, 'email'),
+        name: getAttribute(attributes, 'name'),
+        endereco: getAttribute(attributes, 'address'),
+        telefone: getAttribute(attributes, 'phone_number'),
+        dtNascimento: getAttribute(attributes, 'birthdate'),
+        sexo: getAttribute(attributes, 'gender'),
         groups: groups);
+
     return user;
+  }
+
+  String? getAttribute(List<CognitoUserAttribute> attributes, String name) {
+    try {
+      return attributes.firstWhere((t) => t.getName() == name).value;
+    } catch (e) {}
+    return null;
   }
 
   Future<bool?> refreshToken(String username, String password) async {

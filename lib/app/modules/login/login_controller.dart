@@ -36,6 +36,10 @@ class LoginController extends GetxController {
             message: 'E-mail ou senha incorretos !',
             duration: const Duration(seconds: 3));
       }
+      if (Get.arguments != null) {
+        var returnUrl = Get.arguments['returnUrl'];
+        await Get.toNamed(returnUrl);
+      }
     }
   }
 
