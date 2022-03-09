@@ -5,9 +5,6 @@ import 'package:hmv_care_app/app/features/authentication/authentication_state.da
 import 'app_pages.dart';
 
 class AuthGuard extends GetMiddleware {
-//   Get the auth service
-  final authController = Get.find<AuthenticationController>();
-
 //   The default is 0 but you can update it to any number. Please ensure you match the priority based
 //   on the number of guards you have.
   @override
@@ -16,7 +13,8 @@ class AuthGuard extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     // Navigate to login if client is not authenticated other wise continue
-    bool isAuthenticated = authController.state is Authenticated;
+    bool isAuthenticated =
+        Get.find<AuthenticationController>().state is Authenticated;
 
     if (!isAuthenticated || route == AppRoutes.LOGIN) {
       return RouteSettings(

@@ -21,11 +21,12 @@ abstract class AppPages {
       page: () => LoginPage(),
       binding: LoginBinding(),
     ),
-    /*GetPage(
+    GetPage(
       name: AppRoutes.REGISTER,
       page: () => RegisterPage(),
       binding: RegisterBinding(),
-    ),*/
+      middlewares: [AuthGuard()],
+    ),
     GetPage(
       name: AppRoutes.HOME,
       page: () => HomePage(),

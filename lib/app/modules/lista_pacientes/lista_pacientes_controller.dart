@@ -41,6 +41,10 @@ class ListaPacientesController extends GetxController {
     await _authController.logout();
   }
 
+  openCadastroPaciente() async {
+    await Get.toNamed(AppRoutes.REGISTER);
+  }
+
   String formatCPF(String cpf) {
     try {
       return UtilBrasilFields.obterCpf(

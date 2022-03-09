@@ -321,71 +321,15 @@ class HospitalTab extends GetView<HomeController> {
       );
     }
 
-    return Scaffold(
-      body: Container(
-        color: AppColors.blue,
-        height: Get.height,
-        child: SafeArea(
-            child: Stack(
-          children: [
-            const Positioned(
-              child: HMVTopbar(),
-              top: 10,
-              left: 10,
-              right: 10,
-            ),
-            Positioned(
-              top: 10.h,
-              child: Container(
-                height: 90.h,
-                width: 100.w,
-                padding: const EdgeInsets.only(bottom: 20),
-                decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
-                    )),
-                child: SingleChildScrollView(child: buildBody()),
-              ),
-            )
-          ],
-        )),
-      ),
+    return Container(
+      padding: const EdgeInsets.only(bottom: 20),
+      decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(40),
+            topRight: Radius.circular(40),
+          )),
+      child: buildBody(),
     );
-  }
-}
-
-class MyData extends DataTableSource {
-  // Generate some made-up data
-  List<Paciente> pacientes;
-  MyData(this.pacientes);
-
-  @override
-  bool get isRowCountApproximate => false;
-  @override
-  int get rowCount => pacientes.length;
-  @override
-  int get selectedRowCount => 0;
-  @override
-  DataRow getRow(int index) {
-    var paciente = pacientes[index];
-    return DataRow(cells: [
-      DataCell(Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        child: const CircleAvatar(
-          backgroundImage:
-              NetworkImage('https://100k-faces.glitch.me/random-image'),
-          radius: 30,
-        ),
-      )),
-      DataCell(Text(paciente.nomeCompleto!)),
-      DataCell(Text((paciente.cpf!))),
-      DataCell(Text(paciente.email!)),
-      DataCell(Text(paciente.dataNascimento!)),
-      DataCell(Text((paciente.telefone!))),
-      DataCell(IconButton(
-          onPressed: () {}, icon: const Icon(Icons.medical_services_rounded)))
-    ]);
   }
 }

@@ -22,32 +22,57 @@ class ListaPacientesPage extends GetView<ListaPacientesController> {
   Widget build(BuildContext context) {
     Widget buildBody() {
       return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Lista de Pacientes', style: KTextStyle.headerTextStyle),
-            CustomFormField(
-                headingText: '',
-                onSubmitt: (text) {
-                  var list = controller.allPacientes
-                      .where((t) =>
-                          t.cpf!.toLowerCase().startsWith(text
-                              .toLowerCase()
-                              .replaceAll('-', '')
-                              .replaceAll('.', '')) ||
-                          t.email!.toLowerCase().startsWith(text.toLowerCase()))
-                      .toList();
-                  controller.pacientes.value = list;
-                },
-                hintText: 'Buscar por CPF ou Email',
-                obsecureText: false,
-                suffixIcon: SizedBox(),
-                textInputType: TextInputType.number,
-                textInputAction: TextInputAction.search,
-                controller: _searchBarController,
-                maxLines: 1),
-            SizedBox(height: 20),
+            const Text('Lista de Pacientes', style: KTextStyle.headerTextStyle),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomFormField(
+                    headingText: '',
+                    onSubmitt: (text) {
+                      var list = controller.allPacientes
+                          .where((t) =>
+                              t.cpf!.toLowerCase().startsWith(text
+                                  .toLowerCase()
+                                  .replaceAll('-', '')
+                                  .replaceAll('.', '')) ||
+                              t.email!
+                                  .toLowerCase()
+                                  .startsWith(text.toLowerCase()))
+                          .toList();
+                      controller.pacientes.value = list;
+                    },
+                    hintText: 'Buscar por CPF ou Email',
+                    obsecureText: false,
+                    suffixIcon: const SizedBox(),
+                    textInputType: TextInputType.number,
+                    textInputAction: TextInputAction.search,
+                    controller: _searchBarController,
+                    maxLines: 1),
+                Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    child: InkWell(
+                      onTap: () async {
+                        await controller.openCadastroPaciente();
+                      },
+                      child: Row(
+                        children: const [
+                          Icon(Icons.person_add),
+                          SizedBox(width: 5),
+                          Text(
+                            'Cadastrar Paciente',
+                            style: KTextStyle.textFieldHeading,
+                          ),
+                        ],
+                      ),
+                    ))
+              ],
+            ),
+            const SizedBox(height: 20),
             SingleChildScrollView(
                 child: Obx(
               () => DataTable(
@@ -59,17 +84,15 @@ class ListaPacientesPage extends GetView<ListaPacientesController> {
                     DataColumn(label: Text('Email')),
                     DataColumn(label: Text('Nascimento')),
                     DataColumn(label: Text('Telefone')),
-                    DataColumn(label: Text('')),
-                    DataColumn(label: Text(''))
                   ],
                   rows: controller.pacientes.map((t) {
                     var paciente = t as Paciente;
                     return DataRow(cells: [
                       DataCell(Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
-                        child: const CircleAvatar(
+                        child: CircleAvatar(
                           backgroundImage: NetworkImage(
-                              'https://100k-faces.glitch.me/random-image'),
+                              paciente.foto ?? Constants.DEFAULT_PROFILE_PIC),
                           radius: 30,
                         ),
                       )),
@@ -79,12 +102,6 @@ class ListaPacientesPage extends GetView<ListaPacientesController> {
                       DataCell(Text(paciente.dataNascimento!)),
                       DataCell(Text(controller.formatTelefone(
                           paciente.telefone!.replaceAll('+55', '')))),
-                      DataCell(IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.medical_services_rounded))),
-                      DataCell(IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.medical_services_rounded)))
                     ]);
                   }).toList()),
             ))
@@ -93,37 +110,17 @@ class ListaPacientesPage extends GetView<ListaPacientesController> {
       );
     }
 
-    return Scaffold(
-      body: Container(
-        color: AppColors.blue,
-        height: Get.height,
-        child: SafeArea(
-            child: Stack(
-          children: [
-            Positioned(
-              child: HMVTopbar(),
-              top: 10,
-              left: 10,
-              right: 10,
-            ),
-            Positioned(
-              top: 10.h,
-              child: Container(
-                height: 90.h,
-                width: 100.w,
-                padding: const EdgeInsets.only(bottom: 20),
-                decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
-                    )),
-                child: buildBody(),
-              ),
-            )
-          ],
-        )),
-      ),
+    return Container(
+      height: 90.h,
+      width: 100.w,
+      padding: const EdgeInsets.only(bottom: 20),
+      decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(40),
+            topRight: Radius.circular(40),
+          )),
+      child: buildBody(),
     );
   }
 }
@@ -157,7 +154,7 @@ class MyData extends DataTableSource {
       DataCell(Text(paciente.dataNascimento!)),
       DataCell(Text((paciente.telefone!))),
       DataCell(IconButton(
-          onPressed: () {}, icon: Icon(Icons.medical_services_rounded)))
+          onPressed: () {}, icon: const Icon(Icons.medical_services_rounded)))
     ]);
   }
 }

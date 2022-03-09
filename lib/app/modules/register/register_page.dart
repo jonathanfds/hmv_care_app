@@ -11,7 +11,7 @@ import '../../widgets/custom_richtext.dart';
 import 'register_controller.dart';
 
 class RegisterPage extends GetView<RegisterController> {
-  const RegisterPage({Key? key}) : super(key: key);
+  RegisterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +21,7 @@ class RegisterPage extends GetView<RegisterController> {
     TextEditingController _dtNascController = TextEditingController();
     TextEditingController _confirmPasswordController = TextEditingController();
     TextEditingController _nameController = TextEditingController();
+    TextEditingController _telefoneController = TextEditingController();
 
     SingleChildScrollView buildBody() {
       return SingleChildScrollView(
@@ -139,6 +140,19 @@ class RegisterPage extends GetView<RegisterController> {
                       }),
                   controller: _confirmPasswordController,
                 )),
+            const SizedBox(
+              height: 15,
+            ),
+            CustomFormField(
+              headingText: "Telefone",
+              hintText: "Telefone",
+              obsecureText: false,
+              suffixIcon: const SizedBox(),
+              controller: _telefoneController,
+              maxLines: 1,
+              textInputAction: TextInputAction.done,
+              textInputType: TextInputType.phone,
+            ),
             const SizedBox(
               height: 15,
             ),

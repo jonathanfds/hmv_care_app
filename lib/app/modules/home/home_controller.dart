@@ -6,6 +6,8 @@ import 'package:hmv_care_app/app/data/providers/datastorage_api.dart';
 import 'package:hmv_care_app/app/data/repositories/pacientes_repository.dart';
 import 'package:hmv_care_app/app/features/authentication/authentication_controller.dart';
 import 'package:hmv_care_app/app/features/authentication/authentication_state.dart';
+import 'package:hmv_care_app/app/modules/lista_pacientes/lista_pacientes_controller.dart';
+import 'package:hmv_care_app/app/modules/lista_pacientes/lista_pacientes_page.dart';
 import 'package:intl/intl.dart';
 
 import '../../../routes/app_pages.dart';
@@ -34,6 +36,7 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     _authController = Get.find();
+
     loadEmergencias();
   }
 
@@ -47,16 +50,14 @@ class HomeController extends GetxController {
 
   Future loadEmergencias() async {
     if (userGroup == 'hospital') {
+      Get.put<ListaPacientesController>(
+          ListaPacientesController(_pacientesRepository));
       allEmergencias = await _emergenciasRepository.getAll();
       allEmergencias.sort(emergenciaCompareByDate);
       selectedEmergenciaIdx = 0;
       emergencias.value = allEmergencias;
     }
     loading = false;
-  }
-
-  logoutApp() async {
-    await _authController.logout();
   }
 
   int emergenciaCompareByDate(Emergencia a, Emergencia b) {

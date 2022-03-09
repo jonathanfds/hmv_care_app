@@ -33,6 +33,7 @@ class Paciente implements IBaseModel {
       this.peso,
       this.altura,
       this.bebidaAlcoolica,
+      this.foto,
       this.ultimaAtualizacao});
   @override
   String id;
@@ -56,6 +57,7 @@ class Paciente implements IBaseModel {
   String? peso;
   String? altura;
   bool? bebidaAlcoolica;
+  String? foto;
   String get idade {
     var dtNasci = DateFormat('dd/MM/yyyy').parse(dataNascimento!);
     final difference = DateTime.now().difference(dtNasci).inDays ~/ 365;

@@ -18,7 +18,7 @@ class DioCustomClient {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers":
-          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+          "Origin,X-Requested-With,Accept,Access-Control-Allow-Headers,Access-Control-Allow-Methods,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
     });
     dioClient.interceptors.clear();
     dioClient.interceptors
