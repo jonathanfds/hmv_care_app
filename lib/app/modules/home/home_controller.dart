@@ -1,23 +1,18 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:get/get.dart';
-import 'package:hmv_care_app/app/data/models/emergencia.dart';
-import 'package:hmv_care_app/app/data/models/paciente.dart';
-import 'package:hmv_care_app/app/data/providers/datastorage_api.dart';
+import 'package:hmv_care_app/app/data/models/ModelProvider.dart';
 import 'package:hmv_care_app/app/data/repositories/pacientes_repository.dart';
 import 'package:hmv_care_app/app/features/authentication/authentication_controller.dart';
 import 'package:hmv_care_app/app/features/authentication/authentication_state.dart';
 import 'package:hmv_care_app/app/modules/lista_pacientes/lista_pacientes_controller.dart';
-import 'package:hmv_care_app/app/modules/lista_pacientes/lista_pacientes_page.dart';
 import 'package:intl/intl.dart';
-
 import '../../../routes/app_pages.dart';
 import '../../data/models/login_user.dart';
-import '../../data/providers/dio_custom_client.dart';
 import '../../data/repositories/emergencias_repository.dart';
 
 class HomeController extends GetxController {
-  final PacientesRepository _pacientesRepository;
-  final EmergenciasRepository _emergenciasRepository;
+  final IPacientesRepository _pacientesRepository;
+  final IEmergenciasRepository _emergenciasRepository;
   late AuthenticationController _authController;
   List<Emergencia> allEmergencias = [];
   RxList emergencias = [].obs;
@@ -65,9 +60,9 @@ class HomeController extends GetxController {
     final propertyA = dateFormat.parse(a.data!);
     final propertyB = dateFormat.parse(b.data!);
 
-    if (a.severidade == "Grave") return -1;
+    if (a.severidade == EmergenciaSeveridadeEnum.GRAVE) return -1;
 
-    if (b.severidade == "Grave") return 1;
+    if (b.severidade == EmergenciaSeveridadeEnum.GRAVE) return 1;
 
     if (propertyA.isBefore(propertyB)) {
       return 1;
@@ -76,6 +71,10 @@ class HomeController extends GetxController {
     } else {
       return 0;
     }
+  }
+
+  int calcAge(String date) {
+    return 000;
   }
 
   openEmergencia() async {

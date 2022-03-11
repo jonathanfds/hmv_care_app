@@ -1,0 +1,59 @@
+enum AtividadeFisicaEnum {
+  UM_SEMANA
+  DOIS_TRES_SEMANA
+  QUATRO_CINCO_SEMANA
+  SEIS_MAIS_SEMANA
+  SEDENTARIO
+}
+
+type QuestionarioPergunta {
+  pergunta: String
+  resposta: String
+}
+
+enum EmergenciaSeveridadeEnum {
+  GRAVE
+  MEDIO
+  LEVE
+}
+
+enum EmergenciaStatusEnum {
+  ABERTO
+  ANDAMENTO
+  FINALIZADO
+}
+
+type Emergencia @model @auth(rules: [{allow: groups, groups: ["pacientes"], operations: [create]}, {allow: groups, groups: ["hospital"], operations: [read, create, update, delete]}, {allow: owner}]) {
+  id: ID!
+  data: String
+  localizacao: String
+  status: EmergenciaStatusEnum
+  severidade: EmergenciaSeveridadeEnum
+  questionario: [QuestionarioPergunta]
+  paciente: Pacientes @hasOne
+}
+
+type Pacientes @model @auth(rules: [{allow: groups, groups: ["hospital"], operations: [read, update, delete]}, {allow: owner}]) {
+  id: ID!
+  nome_completo: String
+  cpf: String
+  email: String
+  data_nascimento: String
+  nome_mae: String
+  telefone: String
+  endereco: String
+  convenio: String
+  plano: String
+  peso: String
+  altura: String
+  doencas: String
+  remedios_controlados: String
+  remedios_alergia: String
+  possui_historico_cardiaco: Boolean
+  bebida_alcoolica: Boolean
+  fumante: Boolean
+  observacoes: String
+  user_id: String
+  atividade_fisica: AtividadeFisicaEnum
+}
+ 

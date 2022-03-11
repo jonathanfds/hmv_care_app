@@ -1,13 +1,14 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:hmv_care_app/app/data/models/paciente.dart';
 import 'package:hmv_care_app/app/widgets/custom_richtext.dart';
 import 'package:hmv_care_app/core/theme/app_text_styles.dart';
 import 'package:sizer/sizer.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+import 'package:hmv_care_app/app/data/models/ModelProvider.dart';
+
 class PacienteTile extends StatelessWidget {
-  final Paciente paciente;
+  final Pacientes paciente;
   const PacienteTile({Key? key, required this.paciente}) : super(key: key);
 
   @override
@@ -31,12 +32,12 @@ class PacienteTile extends StatelessWidget {
     return Container(
       width: 200,
       height: 160,
-      margin: EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       child: SizedBox(
         child: Card(
           elevation: 4,
           child: Container(
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             child: Row(
               children: [
                 ClipOval(
@@ -45,7 +46,7 @@ class PacienteTile extends StatelessWidget {
                   image: 'https://100k-faces.glitch.me/random-image',
                   fit: BoxFit.cover,
                 )),
-                SizedBox(
+                const SizedBox(
                   width: 15,
                 ),
                 Column(
@@ -53,7 +54,7 @@ class PacienteTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      paciente.nomeCompleto!,
+                      paciente.nome_completo!,
                       style: KTextStyle.titleTextStyle,
                     ),
                     Text(
@@ -61,7 +62,7 @@ class PacienteTile extends StatelessWidget {
                       style: KTextStyle.textStyle,
                     ),
                     Text(
-                      'Nascimento: ${paciente.dataNascimento!}',
+                      'Nascimento: ${paciente.data_nascimento!}',
                       style: KTextStyle.textStyle,
                     ),
                     CustomRichText(

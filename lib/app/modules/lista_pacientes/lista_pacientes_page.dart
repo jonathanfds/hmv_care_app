@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hmv_care_app/app/data/models/ModelProvider.dart';
 import 'package:hmv_care_app/app/modules/home/home_controller.dart';
 import 'package:hmv_care_app/app/widgets/custom_formfield.dart';
 import 'package:hmv_care_app/core/theme/app_colors.dart';
@@ -7,7 +8,6 @@ import 'package:hmv_care_app/core/utils/constants.dart';
 import 'package:sizer/sizer.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import '../../data/models/paciente.dart';
 import '../home/widgets/topbar.dart';
 import 'lista_pacientes_controller.dart';
 
@@ -86,20 +86,20 @@ class ListaPacientesPage extends GetView<ListaPacientesController> {
                     DataColumn(label: Text('Telefone')),
                   ],
                   rows: controller.pacientes.map((t) {
-                    var paciente = t as Paciente;
+                    var paciente = t as Pacientes;
                     return DataRow(cells: [
                       DataCell(Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              paciente.foto ?? Constants.DEFAULT_PROFILE_PIC),
+                        child: const CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(Constants.DEFAULT_PROFILE_PIC),
                           radius: 30,
                         ),
                       )),
-                      DataCell(Text(paciente.nomeCompleto!)),
+                      DataCell(Text(paciente.nome_completo!)),
                       DataCell(Text(controller.formatCPF(paciente.cpf!))),
                       DataCell(Text(paciente.email!)),
-                      DataCell(Text(paciente.dataNascimento!)),
+                      DataCell(Text(paciente.data_nascimento!)),
                       DataCell(Text(controller.formatTelefone(
                           paciente.telefone!.replaceAll('+55', '')))),
                     ]);
@@ -127,7 +127,7 @@ class ListaPacientesPage extends GetView<ListaPacientesController> {
 
 class MyData extends DataTableSource {
   // Generate some made-up data
-  List<Paciente> pacientes;
+  List<Pacientes> pacientes;
   MyData(this.pacientes);
 
   @override
@@ -148,10 +148,10 @@ class MyData extends DataTableSource {
           radius: 30,
         ),
       )),
-      DataCell(Text(paciente.nomeCompleto!)),
+      DataCell(Text(paciente.nome_completo!)),
       DataCell(Text((paciente.cpf!))),
       DataCell(Text(paciente.email!)),
-      DataCell(Text(paciente.dataNascimento!)),
+      DataCell(Text(paciente.data_nascimento!)),
       DataCell(Text((paciente.telefone!))),
       DataCell(IconButton(
           onPressed: () {}, icon: const Icon(Icons.medical_services_rounded)))

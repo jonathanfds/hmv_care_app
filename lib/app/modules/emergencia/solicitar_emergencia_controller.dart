@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:hmv_care_app/app/data/models/QuestionarioPergunta.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../data/models/emergencia.dart';
-import '../../data/models/paciente.dart';
+import '../../data/models/ModelProvider.dart';
 import '../../data/repositories/emergencias_repository.dart';
 import 'perguntas.dart';
 
 class SolicitarEmergenciaController extends GetxController {
-  late Paciente _paciente;
-  EmergenciasRepository _emergenciasRepository;
+  late Pacientes _paciente;
+  IEmergenciasRepository _emergenciasRepository;
   SolicitarEmergenciaController(this._emergenciasRepository);
 
   final _dorPeito = Rxn<bool>();
@@ -49,7 +47,7 @@ class SolicitarEmergenciaController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    _paciente = Get.arguments as Paciente;
+    _paciente = Get.arguments as Pacientes;
   }
 
   confirmarEmergencia() async {
@@ -64,13 +62,36 @@ class SolicitarEmergenciaController extends GetxController {
     questionario[perguntas[5]!] = senteNausea == true ? "SIM" : "NÃO";
     questionario[perguntas[6]!] = alteracaoCardiaca == true ? "SIM" : "NÃO";
 
-    var dateNow = DateTime.now();
-    String formattedDate = DateFormat('dd/MM/yyyy HH:mm:ss').format(dateNow);
+    EmergenciaSeveridadeEnum severidade = EmergenciaSeveridadeEnum.LEVE;
+    int countSim = questionario.values.where((t) => t == "SIM").length;
+
+    if (_paciente.fumante!) {
+      countSim++;
+    }
+    if (_paciente.possui_historico_cardiaco!) {
+      countSim++;
+    }
+    if (_paciente.atividade_fisica == AtividadeFisicaEnum.SEDENTARIO) {
+      countSim++;
+    }
+    if (countSim > 3) {
+      severidade = EmergenciaSeveridadeEnum.GRAVE;
+    } else if (countSim > 1) {
+      severidade = EmergenciaSeveridadeEnum.MEDIO;
+    }
+
+    String formattedDate =
+        DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
     Emergencia emergencia = Emergencia(
-        id: Uuid().v4(),
         data: formattedDate,
         paciente: _paciente,
-        questionario: questionario);
+        emergenciaPacienteId: _paciente.id,
+        status: EmergenciaStatusEnum.ABERTO,
+        severidade: severidade,
+        questionario: questionario.entries
+            .map(
+                (e) => QuestionarioPergunta(pergunta: e.key, resposta: e.value))
+            .toList());
 
     var result = await _emergenciasRepository.insert(emergencia);
     loading = false;

@@ -81,19 +81,35 @@ class AmplifyAuthService extends GetxService implements IAuthenticationService {
     Map<String, dynamic> payload = Jwt.parseJwt(token);
     // Access the groups
     List<String> groups = List<String>.from(payload['cognito:groups']);
+
     User user = User(
         username: currentUser.username,
         userId: currentUser.userId,
-        email: userAttrs
-            .firstWhere(
-                (t) => t.userAttributeKey == CognitoUserAttributeKey.email)
-            .value,
-        name: userAttrs
-            .firstWhere(
-                (t) => t.userAttributeKey == CognitoUserAttributeKey.name)
-            .value,
+        cpf: getAttribute(payload, 'custom:cpf'),
+        email: getAttribute(payload, 'email'),
+        name: getAttribute(payload, 'name'),
+        endereco: getAttribute(payload, 'address'),
+        telefone: getAttribute(payload, 'phone_number'),
+        dtNascimento: getAttribute(payload, 'birthdate'),
+        sexo: getAttribute(payload, 'gender'),
         groups: groups);
+
     return user;
+  }
+
+  String? getAttribute(Map<String, dynamic> attributes, String name) {
+    try {
+      if (attributes.containsKey(name)) {
+        if (attributes[name] is Map &&
+            attributes[name].containsKey('formatted')) {
+          return attributes[name]['formatted'].toString();
+        }
+        return attributes[name].toString();
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 
   @override

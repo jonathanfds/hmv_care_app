@@ -2,12 +2,12 @@
   "providers": [
     "awscloudformation"
   ],
-  "projectName": "HMV",
+  "projectName": "fiapchallengehmvapp",
   "version": "3.1",
   "frontend": "flutter",
   "flutter": {
     "config": {
-      "ResDir": "./lib/"
+      "ResDir": "./lib"
     }
   }
 }

@@ -1,13 +1,12 @@
 {
   "version": 1,
   "serviceConfiguration": {
-    "apiName": "HMV",
+    "apiName": "fiapchallengehmvapp",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/tmp/amplify-a734a97a-6086-4f3f-b66a-d84d0b4237c5/amplify/backend/api/HMV/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-ecea18d4-33f8-4f85-af92-f4a6a55d42b3/amplify/backend/api/fiapchallengehmvapp/schema.graphql",
     "defaultAuthType": {
-      "mode": "API_KEY",
-      "keyDescription": "api key description",
-      "expirationTime": 30
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authfiapchallengehmvapp"
     },
     "additionalAuthTypes": [
       {

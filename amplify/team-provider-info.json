@@ -1,19 +1,19 @@
 {
-  "dev": {
+  "staging": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-hmv-dev-204116-authRole",
-      "UnauthRoleArn": "arn:aws:iam::599041896685:role/amplify-hmv-dev-204116-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::599041896685:role/amplify-hmv-dev-204116-authRole",
-      "Region": "eu-west-2",
-      "DeploymentBucketName": "amplify-hmv-dev-204116-deployment",
-      "UnauthRoleName": "amplify-hmv-dev-204116-unauthRole",
-      "StackName": "amplify-hmv-dev-204116",
-      "StackId": "arn:aws:cloudformation:eu-west-2:599041896685:stack/amplify-hmv-dev-204116/f9fa47e0-7ca5-11ec-aac5-06fcac404b16",
-      "AmplifyAppId": "df2ibanrxdzq6"
+      "AuthRoleName": "amplify-fiapchallengehmvapp-staging-233314-authRole",
+      "UnauthRoleArn": "arn:aws:iam::818640245404:role/amplify-fiapchallengehmvapp-staging-233314-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::818640245404:role/amplify-fiapchallengehmvapp-staging-233314-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-fiapchallengehmvapp-staging-233314-deployment",
+      "UnauthRoleName": "amplify-fiapchallengehmvapp-staging-233314-unauthRole",
+      "StackName": "amplify-fiapchallengehmvapp-staging-233314",
+      "StackId": "arn:aws:cloudformation:us-east-2:818640245404:stack/amplify-fiapchallengehmvapp-staging-233314/4ab881a0-a001-11ec-80a9-02a2f01973be",
+      "AmplifyAppId": "d2bmf16gsfc9f3"
     },
     "categories": {
       "auth": {
-        "hmva65c1579": {}
+        "fiapchallengehmvapp": {}
       }
     }
   }

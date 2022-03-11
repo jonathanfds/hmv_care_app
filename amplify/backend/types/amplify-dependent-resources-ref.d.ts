@@ -1,18 +1,18 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "hmva65c1579": {
+        "fiapchallengehmvapp": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "UserPoolId": "string",
             "UserPoolArn": "string",
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
-            "AppClientID": "string"
+            "AppClientID": "string",
+            "CreatedSNSRole": "string"
         }
     },
     "api": {
-        "HMV": {
-            "GraphQLAPIKeyOutput": "string",
+        "fiapchallengehmvapp": {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         }

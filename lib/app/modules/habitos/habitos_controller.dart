@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:hmv_care_app/app/data/models/paciente.dart';
+import 'package:hmv_care_app/app/data/models/ModelProvider.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/repositories/pacientes_repository.dart';
@@ -10,11 +10,11 @@ class HabitosController extends GetxController {
   TextEditingController remediosControladosController = TextEditingController();
   TextEditingController doencasController = TextEditingController();
   TextEditingController observacoesController = TextEditingController();
-  final PacientesRepository _pacientesRepository;
-  final Paciente _paciente;
+  final IPacientesRepository _pacientesRepository;
+  final Pacientes _paciente;
 
   HabitosController(this._pacientesRepository)
-      : _paciente = Get.arguments as Paciente;
+      : _paciente = Get.arguments as Pacientes;
 
   final _loading = false.obs;
   set loading(value) => _loading.value = value;
@@ -55,49 +55,53 @@ class HabitosController extends GetxController {
   get doencas => _doencas.value;
 
   static const atividadeFisicaOpcoes = [
-    'Não pratica',
     '1 vez por semana',
     '2 ou 3 vezes por semana',
     '4 ou 5 vezes por semana',
-    '5 ou mais vezes por semana'
+    '6 ou mais vezes por semana',
+    'Não pratica'
   ];
 
   loadInfo() {
-    atividadeFisica = _paciente.atividadeFisica;
-    bebida = _paciente.bebidaAlcoolica;
+    if (_paciente.atividade_fisica != null) {
+      atividadeFisica = atividadeFisicaOpcoes[
+          AtividadeFisicaEnum.values.indexOf(_paciente.atividade_fisica!)];
+    }
+    bebida = _paciente.bebida_alcoolica;
     fumante = _paciente.fumante;
 
     alergiaMedicamento =
-        _paciente.remediosAlergia?.isEmpty == true ? false : true;
+        _paciente.remedios_alergia?.isEmpty == true ? false : true;
 
     medicamentoControlado =
-        _paciente.remediosControlados?.isEmpty == true ? false : true;
+        _paciente.remedios_controlados?.isEmpty == true ? false : true;
+
+    doencas = _paciente.doencas?.isEmpty == true ? false : true;
 
     doencasController = TextEditingController(text: _paciente.doencas);
-    historicoCardiaco = _paciente.possuiHistoricoCardiaco;
+    historicoCardiaco = _paciente.possui_historico_cardiaco;
     remediosControladosController =
-        TextEditingController(text: _paciente.remediosControlados);
+        TextEditingController(text: _paciente.remedios_controlados);
     alergiaRemediosController =
-        TextEditingController(text: _paciente.remediosAlergia);
+        TextEditingController(text: _paciente.remedios_alergia);
     observacoesController = TextEditingController(text: _paciente.observacoes);
   }
 
   atualizar() async {
     //ATUALIZAR DADOS
-    var dateNow = DateTime.now();
-    String formattedDate = DateFormat('dd/MM/yyyy HH:mm:ss').format(dateNow);
-    _paciente.ultimaAtualizacao = formattedDate;
-    _paciente.atividadeFisica = atividadeFisica;
-    _paciente.doencas = doencas == true ? doencasController.text : '';
-    _paciente.bebidaAlcoolica = bebida;
-    _paciente.fumante = fumante;
-    _paciente.possuiHistoricoCardiaco = historicoCardiaco;
-    _paciente.remediosControlados =
-        medicamentoControlado ? remediosControladosController.text : '';
-    _paciente.remediosAlergia =
-        alergiaMedicamento ? alergiaRemediosController.text : '';
-    _paciente.observacoes = observacoesController.text;
-    await _pacientesRepository.update(_paciente);
+    Pacientes paciente = _paciente.copyWith(
+        atividade_fisica: AtividadeFisicaEnum
+            .values[atividadeFisicaOpcoes.indexOf(atividadeFisica)],
+        doencas: doencas == true ? doencasController.text : '',
+        bebida_alcoolica: bebida,
+        fumante: fumante,
+        possui_historico_cardiaco: historicoCardiaco,
+        remedios_controlados:
+            medicamentoControlado ? remediosControladosController.text : '',
+        remedios_alergia:
+            alergiaMedicamento ? alergiaRemediosController.text : '',
+        observacoes: observacoesController.text);
+    await _pacientesRepository.update(paciente);
     Get.back();
   }
 }
