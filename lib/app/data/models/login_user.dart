@@ -9,6 +9,7 @@ class User {
   String? sexo;
   String? telefone;
   String? endereco;
+  String? nomeMae;
   List<String> groups = [];
 
   User(
@@ -21,6 +22,7 @@ class User {
       this.dtNascimento,
       this.telefone,
       this.sexo,
+      this.nomeMae,
       this.endereco,
       this.groups = const []});
 }

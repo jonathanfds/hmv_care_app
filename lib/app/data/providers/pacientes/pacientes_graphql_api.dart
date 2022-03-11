@@ -64,7 +64,7 @@ class PacientesGraphQLApi extends IPacientesRepository {
   }
 
   @override
-  Future<Pacientes> getById(String id) {
+  Future<Pacientes?> getById(String id) {
     // TODO: implement getById
     throw UnimplementedError();
   }

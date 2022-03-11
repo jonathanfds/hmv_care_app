@@ -5,7 +5,7 @@ import '../models/ModelProvider.dart';
 
 abstract class IPacientesRepository {
   Future<List<Pacientes>> getAll();
-  Future<Pacientes> getById(String id);
+  Future<Pacientes?> getById(String id);
   Future<bool> delete(id);
   Future<bool> update(Pacientes obj);
   Future<bool> insert(Pacientes obj);

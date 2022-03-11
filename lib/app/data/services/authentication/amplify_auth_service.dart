@@ -31,7 +31,8 @@ class AmplifyAuthService extends GetxService implements IAuthenticationService {
     try {
       var signInResult =
           await Amplify.Auth.signIn(username: username, password: password);
-      return signInResult.isSignedIn;
+      var result = signInResult.isSignedIn;
+      return result;
     } catch (e) {
       if (e is UserNotFoundException || e is NotAuthorizedException) {
         return false;
@@ -67,6 +68,7 @@ class AmplifyAuthService extends GetxService implements IAuthenticationService {
 
   @override
   Future<User> getUserInfo() async {
+    Amplify.DataStore.start();
     var session = await Amplify.Auth.fetchAuthSession(
         options: CognitoSessionOptions(getAWSCredentials: true));
     var currentUser = await Amplify.Auth.getCurrentUser();
@@ -86,6 +88,7 @@ class AmplifyAuthService extends GetxService implements IAuthenticationService {
         username: currentUser.username,
         userId: currentUser.userId,
         cpf: getAttribute(payload, 'custom:cpf'),
+        nomeMae: getAttribute(payload, 'custom:nome_mae'),
         email: getAttribute(payload, 'email'),
         name: getAttribute(payload, 'name'),
         endereco: getAttribute(payload, 'address'),

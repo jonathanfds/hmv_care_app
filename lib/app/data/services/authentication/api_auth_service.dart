@@ -94,6 +94,7 @@ class ApiAuthService extends GetxService implements IAuthenticationService {
         username: username!,
         userId: getAttribute(attributes, 'sub'),
         cpf: getAttribute(attributes, 'custom:cpf'),
+        nomeMae: getAttribute(attributes, 'custom:nome_mae'),
         email: getAttribute(attributes, 'email'),
         name: getAttribute(attributes, 'name'),
         endereco: getAttribute(attributes, 'address'),

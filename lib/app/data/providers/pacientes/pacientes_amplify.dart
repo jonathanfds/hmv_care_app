@@ -19,10 +19,13 @@ class PacientesAmplify extends IPacientesRepository {
   }
 
   @override
-  Future<Pacientes> getById(String id) async {
+  Future<Pacientes?> getById(String id) async {
     List<Pacientes> items = await Amplify.DataStore.query(Pacientes.classType,
         where: Pacientes.USER_ID.eq(id));
-    return items.first;
+    if (items.isNotEmpty) {
+      return items.first;
+    }
+    return null;
   }
 
   @override

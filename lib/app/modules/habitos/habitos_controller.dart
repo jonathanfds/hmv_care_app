@@ -10,6 +10,8 @@ class HabitosController extends GetxController {
   TextEditingController remediosControladosController = TextEditingController();
   TextEditingController doencasController = TextEditingController();
   TextEditingController observacoesController = TextEditingController();
+  TextEditingController alturaController = TextEditingController();
+  TextEditingController pesoController = TextEditingController();
   final IPacientesRepository _pacientesRepository;
   final Pacientes _paciente;
 
@@ -46,7 +48,7 @@ class HabitosController extends GetxController {
   set bebida(value) => _bebida.value = value;
   get bebida => _bebida.value;
 
-  final _atividadeFisica = atividadeFisicaOpcoes[0].obs;
+  final _atividadeFisica = atividadeFisicaOpcoes[4].obs;
   set atividadeFisica(value) => _atividadeFisica.value = value;
   get atividadeFisica => _atividadeFisica.value;
 
@@ -70,14 +72,17 @@ class HabitosController extends GetxController {
     bebida = _paciente.bebida_alcoolica;
     fumante = _paciente.fumante;
 
-    alergiaMedicamento =
-        _paciente.remedios_alergia?.isEmpty == true ? false : true;
-
-    medicamentoControlado =
-        _paciente.remedios_controlados?.isEmpty == true ? false : true;
-
-    doencas = _paciente.doencas?.isEmpty == true ? false : true;
-
+    if (_paciente.remedios_alergia != null) {
+      alergiaMedicamento =
+          _paciente.remedios_alergia?.isEmpty == true ? false : true;
+    }
+    if (_paciente.remedios_controlados != null) {
+      medicamentoControlado =
+          _paciente.remedios_controlados?.isEmpty == true ? false : true;
+    }
+    if (_paciente.doencas != null) {
+      doencas = _paciente.doencas?.isEmpty == true ? false : true;
+    }
     doencasController = TextEditingController(text: _paciente.doencas);
     historicoCardiaco = _paciente.possui_historico_cardiaco;
     remediosControladosController =
@@ -85,6 +90,9 @@ class HabitosController extends GetxController {
     alergiaRemediosController =
         TextEditingController(text: _paciente.remedios_alergia);
     observacoesController = TextEditingController(text: _paciente.observacoes);
+
+    alturaController = TextEditingController(text: _paciente.altura);
+    pesoController = TextEditingController(text: _paciente.peso);
   }
 
   atualizar() async {
@@ -95,6 +103,8 @@ class HabitosController extends GetxController {
         doencas: doencas == true ? doencasController.text : '',
         bebida_alcoolica: bebida,
         fumante: fumante,
+        altura: alturaController.text,
+        peso: pesoController.text,
         possui_historico_cardiaco: historicoCardiaco,
         remedios_controlados:
             medicamentoControlado ? remediosControladosController.text : '',

@@ -85,6 +85,18 @@ class HomeController extends GetxController {
 
   openHabitos() async {
     var pacienteProfile = await _pacientesRepository.getById(user.userId!);
+    if (pacienteProfile == null) {
+      pacienteProfile = Pacientes(
+          user_id: user.userId,
+          cpf: user.cpf,
+          data_nascimento: user.dtNascimento,
+          email: user.email,
+          nome_mae: user.nomeMae,
+          nome_completo: user.name,
+          endereco: user.endereco,
+          telefone: user.telefone);
+      await _pacientesRepository.insert(pacienteProfile);
+    }
     await Get.toNamed(AppRoutes.HABITOS_SAUDE, arguments: pacienteProfile);
   }
 

@@ -63,7 +63,13 @@ class HabitosPage extends GetView<HabitosController> {
 
   Widget buildQuestions() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Obx(() => YesNoQuestion(1, 'Possui alergia a algum medicamento ?',
+      _buildTextQuestion(
+          '1', 'Qual sua altura ?', controller.alturaController, 'Altura'),
+      const SizedBox(height: 15),
+      _buildTextQuestion(
+          '2', 'Qual seu peso ?', controller.pesoController, 'Peso'),
+      const SizedBox(height: 15),
+      Obx(() => YesNoQuestion(3, 'Possui alergia a algum medicamento ?',
               controller.alergiaMedicamento, (checkboxValue) {
             controller.alergiaMedicamento =
                 controller.alergiaMedicamento == null
@@ -72,20 +78,13 @@ class HabitosPage extends GetView<HabitosController> {
           })),
       Obx(() => controller.alergiaMedicamento == true
           ? Container(
-              child: TextField(
-                controller: controller.alergiaRemediosController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  hintText: 'Quais remédios?',
-                  hintStyle: KTextStyle.textFieldHintStyle,
-                ),
-              ),
+              child: _buildTextField(
+                  controller.alergiaRemediosController, 'Quais remédios?'),
               margin: const EdgeInsets.only(left: 20, top: 0),
             )
           : const SizedBox.shrink()),
       const SizedBox(height: 15),
-      Obx(() => YesNoQuestion(2, 'Toma algum medicamento de uso contínuo ?',
+      Obx(() => YesNoQuestion(4, 'Toma algum medicamento de uso contínuo ?',
               controller.medicamentoControlado, (checkboxValue) {
             controller.medicamentoControlado =
                 controller.medicamentoControlado == null
@@ -94,21 +93,14 @@ class HabitosPage extends GetView<HabitosController> {
           })),
       Obx(() => controller.medicamentoControlado == true
           ? Container(
-              child: TextField(
-                controller: controller.remediosControladosController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  hintText: 'Quais remédios?',
-                  hintStyle: KTextStyle.textFieldHintStyle,
-                ),
-              ),
+              child: _buildTextField(
+                  controller.remediosControladosController, 'Quais remédios?'),
               margin: const EdgeInsets.only(left: 20, top: 0),
             )
           : const SizedBox.shrink()),
       const SizedBox(height: 15),
       Obx(() => YesNoQuestion(
-              2,
+              5,
               'Possui histórico de doença cardíaca em familiares ?',
               controller.historicoCardiaco, (checkboxValue) {
             controller.historicoCardiaco = controller.historicoCardiaco == null
@@ -117,7 +109,7 @@ class HabitosPage extends GetView<HabitosController> {
           })),
       const SizedBox(height: 15),
       Obx(() => YesNoQuestion(
-              3, 'Possui alguma doença diagnosticada ?', controller.doencas,
+              6, 'Possui alguma doença diagnosticada ?', controller.doencas,
               (checkboxValue) {
             controller.doencas = controller.doencas == null
                 ? checkboxValue
@@ -125,28 +117,21 @@ class HabitosPage extends GetView<HabitosController> {
           })),
       Obx(() => controller.doencas == true
           ? Container(
-              child: TextField(
-                controller: controller.doencasController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  hintText: 'Quais doenças?',
-                  hintStyle: KTextStyle.textFieldHintStyle,
-                ),
-              ),
+              child: _buildTextField(
+                  controller.doencasController, 'Quais doenças?'),
               margin: const EdgeInsets.only(left: 20, top: 0),
             )
           : const SizedBox.shrink()),
       const SizedBox(height: 15),
       Obx(() =>
-          YesNoQuestion(4, 'É fumante ?', controller.fumante, (checkboxValue) {
+          YesNoQuestion(7, 'É fumante ?', controller.fumante, (checkboxValue) {
             controller.fumante = controller.fumante == null
                 ? checkboxValue
                 : !controller.fumante;
           })),
       const SizedBox(height: 15),
       Obx(() =>
-          YesNoQuestion(5, 'Consome bebida alcoólica ?', controller.bebida,
+          YesNoQuestion(8, 'Consome bebida alcoólica ?', controller.bebida,
               (checkboxValue) {
             controller.bebida =
                 controller.bebida == null ? checkboxValue : !controller.bebida;
@@ -158,7 +143,7 @@ class HabitosPage extends GetView<HabitosController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text.rich(TextSpan(
-                  text: '6. ',
+                  text: '9. ',
                   style: KTextStyle.textStyleBold,
                   children: [
                     TextSpan(
@@ -190,7 +175,7 @@ class HabitosPage extends GetView<HabitosController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text.rich(TextSpan(
-                  text: '7. ',
+                  text: '10. ',
                   style: KTextStyle.textStyleBold,
                   children: [
                     TextSpan(
@@ -208,5 +193,38 @@ class HabitosPage extends GetView<HabitosController> {
             ],
           )),
     ]);
+  }
+
+  TextField _buildTextField(TextEditingController controller, String question,
+      {TextInputType keyboard = TextInputType.text}) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboard,
+      textInputAction: TextInputAction.done,
+      decoration: InputDecoration(
+        isDense: true,
+        hintText: question,
+        hintStyle: KTextStyle.textFieldHintStyle,
+      ),
+    );
+  }
+
+  Padding _buildTextQuestion(String num, String question,
+      TextEditingController controller, String hint) {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text.rich(TextSpan(
+                text: '$num. ',
+                style: KTextStyle.textStyleBold,
+                children: [
+                  TextSpan(text: question, style: KTextStyle.textStyle)
+                ])),
+            _buildTextField(controller, question,
+                keyboard: TextInputType.number)
+          ],
+        ));
   }
 }
