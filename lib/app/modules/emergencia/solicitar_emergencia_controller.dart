@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hmv_care_app/app/data/models/QuestionarioPergunta.dart';
+import 'package:hmv_care_app/core/utils/functions.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../../data/models/ModelProvider.dart';
@@ -10,7 +11,7 @@ import 'perguntas.dart';
 class SolicitarEmergenciaController extends GetxController {
   late Pacientes _paciente;
   IEmergenciasRepository _emergenciasRepository;
-  SolicitarEmergenciaController(this._emergenciasRepository);
+  SolicitarEmergenciaController(this._emergenciasRepository, this._paciente);
 
   final _dorPeito = Rxn<bool>();
   set dorPeito(value) => _dorPeito.value = value;
@@ -47,7 +48,6 @@ class SolicitarEmergenciaController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    _paciente = Get.arguments as Pacientes;
   }
 
   confirmarEmergencia() async {
@@ -62,24 +62,6 @@ class SolicitarEmergenciaController extends GetxController {
     questionario[perguntas[5]!] = senteNausea == true ? "SIM" : "NÃO";
     questionario[perguntas[6]!] = alteracaoCardiaca == true ? "SIM" : "NÃO";
 
-    EmergenciaSeveridadeEnum severidade = EmergenciaSeveridadeEnum.LEVE;
-    int countSim = questionario.values.where((t) => t == "SIM").length;
-
-    if (_paciente.fumante!) {
-      countSim++;
-    }
-    if (_paciente.possui_historico_cardiaco!) {
-      countSim++;
-    }
-    if (_paciente.atividade_fisica == AtividadeFisicaEnum.SEDENTARIO) {
-      countSim++;
-    }
-    if (countSim > 3) {
-      severidade = EmergenciaSeveridadeEnum.GRAVE;
-    } else if (countSim > 1) {
-      severidade = EmergenciaSeveridadeEnum.MEDIO;
-    }
-
     String formattedDate =
         DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
     Emergencia emergencia = Emergencia(
@@ -87,7 +69,7 @@ class SolicitarEmergenciaController extends GetxController {
         paciente: _paciente,
         emergenciaPacienteId: _paciente.id,
         status: EmergenciaStatusEnum.ABERTO,
-        severidade: severidade,
+        severidade: calcularRisco(questionario),
         questionario: questionario.entries
             .map(
                 (e) => QuestionarioPergunta(pergunta: e.key, resposta: e.value))
@@ -97,5 +79,46 @@ class SolicitarEmergenciaController extends GetxController {
     loading = false;
     complete = result;
     if (result) {}
+  }
+
+  EmergenciaSeveridadeEnum calcularRisco(Map<String, String> questionario) {
+    var idade = calc_idade(_paciente.data_nascimento!);
+    var imc = calc_imc(_paciente.peso!, _paciente.altura!);
+    var pontos = 0;
+    if (idade >= 10 && idade <= 20) {
+      pontos += 1;
+    } else if (idade > 20 && idade <= 30) {
+      pontos += 2;
+    } else if (idade > 30 && idade <= 40) {
+      pontos += 3;
+    } else if (idade > 40 && idade <= 50) {
+      pontos += 4;
+    } else if (idade > 50 && idade <= 60) {
+      pontos += 5;
+      if (_paciente.fumante!) {
+        pontos += 4;
+      }
+    } else if (idade > 60) {
+      pontos += 6;
+      if (_paciente.fumante!) {
+        pontos += 6;
+      }
+    }
+    if (_paciente.fumante! && idade <= 50) {
+      pontos += 2;
+    }
+    if (_paciente.atividade_fisica == AtividadeFisicaEnum.SEDENTARIO) {
+      pontos += 4;
+    }
+    EmergenciaSeveridadeEnum risco = EmergenciaSeveridadeEnum.LEVE;
+    int countSim = questionario.values.where((t) => t == "SIM").length;
+    if (countSim > 4) {
+      risco = EmergenciaSeveridadeEnum.GRAVE;
+    } else if (countSim > 3 && pontos > 10) {
+      risco = EmergenciaSeveridadeEnum.GRAVE;
+    } else if (countSim > 1 || (pontos <= 10 || pontos > 4)) {
+      risco = EmergenciaSeveridadeEnum.MEDIO;
+    }
+    return risco;
   }
 }

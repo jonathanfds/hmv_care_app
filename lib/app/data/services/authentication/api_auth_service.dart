@@ -1,4 +1,5 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -6,6 +7,7 @@ import 'package:hmv_care_app/app/data/models/login_user.dart';
 import 'package:hmv_care_app/app/data/services/interfaces/authentication_service.dart';
 import 'package:dio/dio.dart';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:uuid/uuid.dart';
 import '../../../../core/utils/constants.dart';
 import '../../providers/hive_cognito_storage.dart';
 
@@ -22,9 +24,16 @@ class ApiAuthService extends GetxService implements IAuthenticationService {
   }
 
   @override
-  Future<bool> confirmUser(String username, String code) {
-    // TODO: implement confirmUser
-    throw UnimplementedError();
+  Future<bool> confirmUser(String username, String code) async {
+    final cognitoUser = CognitoUser(username, userPool);
+
+    bool registrationConfirmed = false;
+    try {
+      registrationConfirmed = await cognitoUser.confirmRegistration(code);
+    } catch (e) {
+      print(e);
+    }
+    return registrationConfirmed;
   }
 
   @override
@@ -69,9 +78,31 @@ class ApiAuthService extends GetxService implements IAuthenticationService {
   }
 
   @override
-  Future<bool> registerUser(User user, String password) {
-    // TODO: implement registerUser
-    throw UnimplementedError();
+  Future<bool> registerUser(User user, String password) async {
+    final userAttributes = [
+      AttributeArg(name: 'custom:cpf', value: user.cpf),
+      AttributeArg(name: 'custom:nome_mae', value: user.nomeMae),
+      AttributeArg(name: 'email', value: user.email),
+      AttributeArg(name: 'name', value: user.name),
+      AttributeArg(name: 'address', value: user.endereco),
+      AttributeArg(name: 'phone_number', value: user.telefone),
+      AttributeArg(name: 'birthdate', value: user.dtNascimento),
+      AttributeArg(name: 'gender', value: user.sexo),
+      AttributeArg(name: 'custom:paciente_id', value: Uuid().v4())
+    ];
+
+    CognitoUserPoolData data;
+    try {
+      data = await userPool.signUp(
+        user.email!,
+        password,
+        userAttributes: userAttributes,
+      );
+      return true;
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 
   @override

@@ -13,16 +13,56 @@ import 'register_controller.dart';
 class RegisterPage extends GetView<RegisterController> {
   RegisterPage({Key? key}) : super(key: key);
 
+  Widget _buildSexoCheckboxes(bool? value, Function(bool?) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(
+            bottom: 10,
+          ),
+          child: const Text(
+            'Sexo',
+            style: KTextStyle.textFieldHeading,
+          ),
+        ),
+        Container(
+          width: 500,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IgnorePointer(
+                ignoring: value ?? false,
+                child: Checkbox(value: value ?? false, onChanged: onChanged),
+              ),
+              const Text(
+                'Masculino',
+                style: KTextStyle.textStyle,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              IgnorePointer(
+                ignoring: value == null ? false : !value,
+                child: Checkbox(
+                    value: value == null ? false : !value,
+                    onChanged: (val) {
+                      onChanged(!(val!));
+                    }),
+              ),
+              const Text(
+                'Feminino',
+                style: KTextStyle.textStyle,
+              )
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController _passwordController = TextEditingController();
-    TextEditingController _emailController = TextEditingController();
-    TextEditingController _cpfController = TextEditingController();
-    TextEditingController _dtNascController = TextEditingController();
-    TextEditingController _confirmPasswordController = TextEditingController();
-    TextEditingController _nameController = TextEditingController();
-    TextEditingController _telefoneController = TextEditingController();
-
     SingleChildScrollView buildBody() {
       return SingleChildScrollView(
         child: Column(
@@ -57,11 +97,19 @@ class RegisterPage extends GetView<RegisterController> {
               hintText: "Nome Completo",
               obsecureText: false,
               suffixIcon: const SizedBox(),
-              controller: _nameController,
+              controller: controller.nameController,
               maxLines: 1,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.name,
             ),
+            const SizedBox(
+              height: 15,
+            ),
+            Obx(() => _buildSexoCheckboxes(controller.sexoMasc, (isMasc) {
+                  controller.sexoMasc = controller.sexoMasc == null
+                      ? isMasc
+                      : !controller.sexoMasc;
+                })),
             const SizedBox(
               height: 15,
             ),
@@ -70,7 +118,7 @@ class RegisterPage extends GetView<RegisterController> {
               hintText: "E-mail",
               obsecureText: false,
               suffixIcon: const SizedBox(),
-              controller: _emailController,
+              controller: controller.emailController,
               maxLines: 1,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.emailAddress,
@@ -83,7 +131,7 @@ class RegisterPage extends GetView<RegisterController> {
               hintText: "Data de Nascimento",
               obsecureText: false,
               suffixIcon: const SizedBox(),
-              controller: _dtNascController,
+              controller: controller.dtNascController,
               maxLines: 1,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.datetime,
@@ -96,7 +144,7 @@ class RegisterPage extends GetView<RegisterController> {
               hintText: "CPF",
               obsecureText: false,
               suffixIcon: const SizedBox(),
-              controller: _cpfController,
+              controller: controller.cpfController,
               maxLines: 1,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.number,
@@ -104,42 +152,16 @@ class RegisterPage extends GetView<RegisterController> {
             const SizedBox(
               height: 15,
             ),
-            Obx(() => CustomFormField(
-                  headingText: "Senha",
-                  maxLines: 1,
-                  textInputAction: TextInputAction.done,
-                  textInputType: TextInputType.text,
-                  hintText: "Senha",
-                  obsecureText: controller.hidePassword,
-                  suffixIcon: IconButton(
-                      icon: controller.hidePassword
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
-                      onPressed: () {
-                        controller.hidePassword = !controller.hidePassword;
-                      }),
-                  controller: _passwordController,
-                )),
-            const SizedBox(
-              height: 15,
+            CustomFormField(
+              headingText: "Nome da Mãe",
+              hintText: "Nome da Mãe",
+              obsecureText: false,
+              suffixIcon: const SizedBox(),
+              controller: controller.nomeMaeController,
+              maxLines: 1,
+              textInputAction: TextInputAction.done,
+              textInputType: TextInputType.name,
             ),
-            Obx(() => CustomFormField(
-                  headingText: "Confirmar Senha",
-                  maxLines: 1,
-                  textInputAction: TextInputAction.done,
-                  textInputType: TextInputType.text,
-                  hintText: "Confirmar Senha",
-                  obsecureText: controller.hideConfirmPassword,
-                  suffixIcon: IconButton(
-                      icon: controller.hideConfirmPassword
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
-                      onPressed: () {
-                        controller.hideConfirmPassword =
-                            !controller.hideConfirmPassword;
-                      }),
-                  controller: _confirmPasswordController,
-                )),
             const SizedBox(
               height: 15,
             ),
@@ -148,7 +170,7 @@ class RegisterPage extends GetView<RegisterController> {
               hintText: "Telefone",
               obsecureText: false,
               suffixIcon: const SizedBox(),
-              controller: _telefoneController,
+              controller: controller.telefoneController,
               maxLines: 1,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.phone,
@@ -156,9 +178,24 @@ class RegisterPage extends GetView<RegisterController> {
             const SizedBox(
               height: 15,
             ),
+            CustomFormField(
+              headingText: "Endereco",
+              hintText: "Endereco",
+              obsecureText: false,
+              suffixIcon: const SizedBox(),
+              controller: controller.enderecoController,
+              maxLines: 1,
+              textInputAction: TextInputAction.done,
+              textInputType: TextInputType.streetAddress,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
             CustomButton(
               text: 'Cadastrar',
-              onTap: () {},
+              onTap: () {
+                controller.register();
+              },
             ),
             const SizedBox(
               height: 15,

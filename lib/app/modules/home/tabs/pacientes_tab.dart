@@ -82,12 +82,7 @@ class PacientesTab extends GetView<HomeController> {
                     blurRadius: 5,
                     offset: const Offset(-2, 3))
               ]),
-          child: ClipOval(
-              child: FadeInImage.memoryNetwork(
-            placeholder: kTransparentImage,
-            image: controller.user.foto ?? Constants.DEFAULT_PROFILE_PIC,
-            fit: BoxFit.cover,
-          )),
+          child: ClipOval(child: Image.asset(Constants.DEFAULT_PROFILE_PIC)),
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -6,6 +6,7 @@ import 'package:hmv_care_app/app/features/authentication/authentication_controll
 import 'package:hmv_care_app/app/features/authentication/authentication_state.dart';
 import 'package:hmv_care_app/app/modules/lista_pacientes/lista_pacientes_controller.dart';
 import 'package:intl/intl.dart';
+import '../../../core/utils/functions.dart';
 import '../../../routes/app_pages.dart';
 import '../../data/models/login_user.dart';
 import '../../data/repositories/emergencias_repository.dart';
@@ -44,6 +45,7 @@ class HomeController extends GetxController {
   User get user => (_authController.state as Authenticated).userInfo;
 
   Future loadEmergencias() async {
+    loading = true;
     if (userGroup == 'hospital') {
       Get.put<ListaPacientesController>(
           ListaPacientesController(_pacientesRepository));
@@ -73,8 +75,8 @@ class HomeController extends GetxController {
     }
   }
 
-  int calcAge(String date) {
-    return 000;
+  int calcularIdade(String date) {
+    return calc_idade(date);
   }
 
   openEmergencia() async {

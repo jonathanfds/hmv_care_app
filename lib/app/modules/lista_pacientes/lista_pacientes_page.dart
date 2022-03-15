@@ -142,9 +142,8 @@ class MyData extends DataTableSource {
     return DataRow(cells: [
       DataCell(Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
-        child: CircleAvatar(
-          backgroundImage: NetworkImage(Get.find<HomeController>().user.foto ??
-              Constants.DEFAULT_PROFILE_PIC),
+        child: const CircleAvatar(
+          backgroundImage: AssetImage(Constants.DEFAULT_PROFILE_PIC),
           radius: 30,
         ),
       )),

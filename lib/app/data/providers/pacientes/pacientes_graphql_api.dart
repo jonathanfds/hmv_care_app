@@ -57,6 +57,7 @@ class PacientesGraphQLApi extends IPacientesRepository {
 
     if (result.exception == null) {
       var items = result.data!['listPacientes']["items"];
+      items = items.where((t) => t['_deleted'] != true).toList();
       var data = items.map((t) => Pacientes.fromJson(t));
       return List<Pacientes>.from(data);
     }

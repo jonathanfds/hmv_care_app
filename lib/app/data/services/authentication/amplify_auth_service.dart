@@ -7,7 +7,7 @@ import 'package:jwt_decode/jwt_decode.dart';
 import '../interfaces/authentication_service.dart';
 
 class AmplifyAuthService extends GetxService implements IAuthenticationService {
-  Future<AmplifyAuthService> init() async {
+  Future<IAuthenticationService> init() async {
     return this;
   }
 

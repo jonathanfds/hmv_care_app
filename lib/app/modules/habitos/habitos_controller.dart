@@ -15,8 +15,7 @@ class HabitosController extends GetxController {
   final IPacientesRepository _pacientesRepository;
   final Pacientes _paciente;
 
-  HabitosController(this._pacientesRepository)
-      : _paciente = Get.arguments as Pacientes;
+  HabitosController(this._pacientesRepository, this._paciente);
 
   final _loading = false.obs;
   set loading(value) => _loading.value = value;
@@ -95,7 +94,33 @@ class HabitosController extends GetxController {
     pesoController = TextEditingController(text: _paciente.peso);
   }
 
+  bool checkAltura(String text) {
+    var result = double.tryParse(text.replaceAll(',', '.'));
+    if (result != null) {
+      return result > 0 && result < 3;
+    }
+    return false;
+  }
+
+  bool checkPeso(String text) {
+    var result = double.tryParse(text.replaceAll(',', '.'));
+    if (result != null) {
+      return result > 0 && result < 500;
+    }
+    return false;
+  }
+
   atualizar() async {
+    if (!checkAltura(alturaController.text)) {
+      Get.rawSnackbar(
+          message: 'Altura inválida !', duration: const Duration(seconds: 3));
+      return;
+    }
+    if (!checkPeso(pesoController.text)) {
+      Get.rawSnackbar(
+          message: 'Peso inválido !', duration: const Duration(seconds: 3));
+      return;
+    }
     //ATUALIZAR DADOS
     Pacientes paciente = _paciente.copyWith(
         atividade_fisica: AtividadeFisicaEnum

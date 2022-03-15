@@ -15,8 +15,6 @@ class LoginPage extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _passwordController = TextEditingController();
-    TextEditingController _usernameController = TextEditingController();
     final _formKey = GlobalKey<FormState>();
     return Scaffold(
       body: Container(
@@ -59,7 +57,7 @@ class LoginPage extends GetView<LoginController> {
                           hintText: "E-mail",
                           obsecureText: false,
                           suffixIcon: const SizedBox(),
-                          controller: _usernameController,
+                          controller: controller.usernameController,
                           maxLines: 1,
                           textInputAction: TextInputAction.done,
                           textInputType: TextInputType.emailAddress,
@@ -83,7 +81,7 @@ class LoginPage extends GetView<LoginController> {
                                     controller.hidePassword =
                                         !controller.hidePassword;
                                   }),
-                              controller: _passwordController,
+                              controller: controller.passwordController,
                             )),
                         const SizedBox(
                           height: 20,
@@ -97,9 +95,7 @@ class LoginPage extends GetView<LoginController> {
                             : CustomButton(
                                 text: 'Entrar',
                                 onTap: () async {
-                                  await controller.login(
-                                      _usernameController.text,
-                                      _passwordController.text);
+                                  await controller.login();
                                 },
                               )),
                         const SizedBox(

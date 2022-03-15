@@ -13,6 +13,6 @@ class AppConfig {
 }
 
 class Constants {
-  static const DEFAULT_PROFILE_PIC =
-      'https://www.clipartkey.com/mpngs/m/198-1988954_staff-profile-photo-facebook-blank-profile-picture-male.png';
+  static const DEFAULT_PASSWORD = 'Abc@1234';
+  static const DEFAULT_PROFILE_PIC = 'assets/images/user_icon.png';
 }
