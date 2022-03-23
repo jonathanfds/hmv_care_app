@@ -21,9 +21,6 @@ class LoginController extends GetxController {
 
   @override
   void onInit() async {
-    if (GetPlatform.isWeb) {
-      usernameController = TextEditingController(text: 'jonathan.fds@live.com');
-    }
     super.onInit();
   }
 

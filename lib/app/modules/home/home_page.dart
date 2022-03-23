@@ -21,7 +21,7 @@ class HomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: Obx(() => Visibility(
-              visible: (controller.userGroup == 'pacientes'),
+              visible: (controller.userGroup == 'pacientes') || Get.width < 650,
               child: BottomNavigationBar(
                   currentIndex: controller.currentTab,
                   onTap: (idx) {
@@ -62,7 +62,8 @@ class HomePage extends GetView<HomeController> {
                     height: 7.h,
                     width: 100.w,
                     child: HMVTopbar(
-                      showMenuItems: (controller.userGroup == 'hospital'),
+                      showMenuItems: (controller.userGroup == 'hospital' &&
+                          Get.width >= 650),
                       onChangeMenu: (idx) {
                         controller.currentTab = idx;
                         _pageController.animateToPage(idx,

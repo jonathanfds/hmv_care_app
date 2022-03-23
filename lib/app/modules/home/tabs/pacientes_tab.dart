@@ -40,13 +40,11 @@ class PacientesTab extends GetView<HomeController> {
                           HomeMenuItem('Solicitar Emergência', () async {
                             await controller.openEmergencia();
                           }, 'https://img.icons8.com/cotton/344/medical-mobile-app-2.png'),
-                          HomeMenuItem('Histórico de Atendimento', () {},
+                          HomeMenuItem('Atendimentos', () {},
                               'https://img.icons8.com/cotton/344/medical-history.png'),
-                          HomeMenuItem('Exames Realizados', () {},
+                          HomeMenuItem('Exames', () {},
                               'https://img.icons8.com/cotton/344/folder-invoices--v2.png'),
-                          HomeMenuItem('Hospitais Próximos', () {},
-                              'https://img.icons8.com/cotton/344/clinic.png'),
-                          HomeMenuItem('Hábitos & Saúde', () async {
+                          HomeMenuItem('Minha Saúde', () async {
                             await controller.openHabitos();
                           }, 'https://img.icons8.com/cotton/344/heart-monitor.png'),
                         ],
@@ -73,6 +71,7 @@ class PacientesTab extends GetView<HomeController> {
         Container(
           height: 100,
           width: 100,
+          margin: const EdgeInsets.only(bottom: 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(60),
               color: Colors.white,

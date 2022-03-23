@@ -32,6 +32,7 @@ class ListaPacientesPage extends GetView<ListaPacientesController> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CustomFormField(
+                    width: Get.width * 0.6,
                     headingText: '',
                     onSubmitt: (text) {
                       var list = controller.allPacientes
@@ -59,13 +60,13 @@ class ListaPacientesPage extends GetView<ListaPacientesController> {
                       onTap: () async {
                         await controller.openCadastroPaciente();
                       },
-                      child: Row(
+                      child: Column(
                         children: const [
                           Icon(Icons.person_add),
                           SizedBox(width: 5),
                           Text(
-                            'Cadastrar Paciente',
-                            style: KTextStyle.textFieldHeading,
+                            'Cadastrar',
+                            style: KTextStyle.normalText,
                           ),
                         ],
                       ),
@@ -92,15 +93,16 @@ class ListaPacientesPage extends GetView<ListaPacientesController> {
                         margin: const EdgeInsets.symmetric(vertical: 5),
                         child: const CircleAvatar(
                           backgroundImage:
-                              NetworkImage(Constants.DEFAULT_PROFILE_PIC),
+                              AssetImage(Constants.DEFAULT_PROFILE_PIC),
                           radius: 30,
                         ),
                       )),
-                      DataCell(Text(paciente.nome_completo!)),
-                      DataCell(Text(controller.formatCPF(paciente.cpf!))),
-                      DataCell(Text(paciente.email!)),
-                      DataCell(Text(paciente.data_nascimento!)),
-                      DataCell(Text(controller.formatTelefone(
+                      DataCell(SelectableText(paciente.nome_completo!)),
+                      DataCell(
+                          SelectableText(controller.formatCPF(paciente.cpf!))),
+                      DataCell(SelectableText(paciente.email!)),
+                      DataCell(SelectableText(paciente.data_nascimento!)),
+                      DataCell(SelectableText(controller.formatTelefone(
                           paciente.telefone!.replaceAll('+55', '')))),
                     ]);
                   }).toList()),
@@ -142,7 +144,7 @@ class MyData extends DataTableSource {
     return DataRow(cells: [
       DataCell(Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
-        child: const CircleAvatar(
+        child: CircleAvatar(
           backgroundImage: AssetImage(Constants.DEFAULT_PROFILE_PIC),
           radius: 30,
         ),

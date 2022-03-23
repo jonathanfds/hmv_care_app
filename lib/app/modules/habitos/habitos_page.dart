@@ -16,7 +16,7 @@ class HabitosPage extends GetView<HabitosController> {
         AppBar().preferredSize.height);
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Hábitos e Saúde'),
+          title: const Text('Minha Saúde'),
           actions: [
             IconButton(
                 onPressed: () async {

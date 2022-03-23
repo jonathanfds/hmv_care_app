@@ -43,15 +43,32 @@ class HospitalTab extends GetView<HomeController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text('Emergências',
-                        style: KTextStyle.headerTextStyle),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 2),
+                          child: IconButton(
+                              onPressed: () async {
+                                await controller.loadEmergencias();
+                              },
+                              icon: const Icon(
+                                Icons.refresh,
+                                color: AppColors.blue,
+                              )),
+                        ),
+                        const SizedBox(width: 10),
+                        const Text('Emergências',
+                            style: KTextStyle.headerTextStyle),
+                      ],
+                    ),
                     const SizedBox(height: 15),
                     Row(
                       children: [
                         Expanded(
                             flex: 2,
                             child: SizedBox(
-                              height: 75.h,
+                              height: 60.h,
                               child: Obx(() => ListView(
                                       children: controller.emergencias.map((t) {
                                     var emergencia = t as Emergencia;
@@ -140,8 +157,11 @@ class HospitalTab extends GetView<HomeController> {
                         Expanded(
                             flex: 8,
                             child: SizedBox(
-                                height: 75.h,
+                                height: 60.h,
                                 child: Obx(() {
+                                  if (controller.emergencias.isEmpty) {
+                                    return Container();
+                                  }
                                   var paciente =
                                       controller.selectedEmergencia.paciente!;
                                   return controller.selectedEmergenciaIdx >= 0
@@ -177,8 +197,10 @@ class HospitalTab extends GetView<HomeController> {
                                                           'CPF',
                                                           controller.formatCPF(
                                                               paciente.cpf!)),
-                                                      _builLabel('Nome da Mãe',
-                                                          paciente.nome_mae!),
+                                                      _builLabel(
+                                                          'Nome da Mãe',
+                                                          paciente.nome_mae ??
+                                                              ''),
                                                       _builLabel(
                                                           'Nascimento',
                                                           paciente
@@ -193,8 +215,10 @@ class HospitalTab extends GetView<HomeController> {
                                                           paciente.email!),
                                                       _builLabel('Endereço',
                                                           paciente.endereco!),
-                                                      _builLabel('Convênio',
-                                                          paciente.convenio!),
+                                                      _builLabel(
+                                                          'Convênio',
+                                                          paciente.convenio ??
+                                                              'Não Informado'),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 30),
@@ -253,21 +277,26 @@ class HospitalTab extends GetView<HomeController> {
                                                                 : 'Não Informado'),
                                                         _builLabel(
                                                             'Alergia aos Remédios',
-                                                            paciente.remedios_alergia ==
-                                                                    ''
+                                                            (paciente.remedios_alergia ==
+                                                                        null ||
+                                                                    paciente.remedios_alergia! ==
+                                                                        '')
                                                                 ? 'Nenhum'
                                                                 : paciente
                                                                     .remedios_alergia!),
                                                         _builLabel(
                                                             'Remédios Controlados',
-                                                            paciente.remedios_controlados ==
-                                                                    ''
+                                                            (paciente.remedios_controlados ==
+                                                                        null ||
+                                                                    paciente.remedios_controlados! ==
+                                                                        '')
                                                                 ? 'Nenhum'
                                                                 : paciente
                                                                     .remedios_controlados!),
-                                                        if (paciente
-                                                                .observacoes! !=
-                                                            '')
+                                                        if (paciente.observacoes !=
+                                                                null &&
+                                                            paciente.observacoes! !=
+                                                                '')
                                                           _builLabel(
                                                               'Observações',
                                                               paciente

@@ -52,6 +52,8 @@ dependencies:
   uuid: ^3.0.6
   intl: ^0.17.0
   graphql: ^5.0.1
+  maps_launcher: ^2.0.1
+  url_launcher: ^6.0.20
 
 dev_dependencies:
   flutter_test:

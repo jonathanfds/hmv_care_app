@@ -36,17 +36,15 @@ class SolicitarEmergenciaPage extends GetView<SolicitarEmergenciaController> {
                     children: [
                       Positioned(
                         top: 0,
-                        child: SizedBox(
-                          height: 80.h,
-                          width: 100.w,
-                          child: SingleChildScrollView(
-                            child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 10),
-                                child: Obx(() => controller.complete
-                                    ? buildComplete()
-                                    : buildQuestions())),
-                          ),
+                        child: SingleChildScrollView(
+                          child: Container(
+                              height: 80.h,
+                              width: 100.w,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                              child: Obx(() => controller.complete
+                                  ? buildComplete()
+                                  : buildQuestions())),
                         ),
                       ),
                       Align(
@@ -65,9 +63,57 @@ class SolicitarEmergenciaPage extends GetView<SolicitarEmergenciaController> {
   }
 
   Column buildComplete() {
-    return Column(
-      children: [const Text('COMPLETO')],
-    );
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Image.network(
+        'https://img.icons8.com/external-microdots-premium-microdot-graphic/64/000000/external-emergency-medical-healthcare-vol1-microdots-premium-microdot-graphic.png',
+        height: 64,
+        width: 64,
+      ),
+      const SizedBox(height: 10),
+      const Text(
+        'Emergência registrada !',
+        style: KTextStyle.titleTextStyle,
+        textAlign: TextAlign.center,
+      ),
+      Container(
+        margin: const EdgeInsets.all(10),
+        child: const Text(
+          'Sua solicatação foi registrada com sucesso, por favor, se diriga para a unidade de atendimento mais próxima.',
+          textAlign: TextAlign.center,
+        ),
+      ),
+      TextButton(
+          onPressed: () async {
+            await controller.openMapsHMV();
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.map),
+              SizedBox(width: 5),
+              Text('Como chegar no Hospital'),
+            ],
+          )),
+      const Text('ou'),
+      TextButton(
+          onPressed: () async {
+            await controller.openCallHMV();
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.phone),
+              SizedBox(width: 5),
+              Text('Ligar para Hospital'),
+            ],
+          )),
+      const SizedBox(height: 15),
+      CustomButton(
+          onTap: () async {
+            Get.back();
+          },
+          text: 'Fechar')
+    ]);
   }
 
   Column buildQuestions() {

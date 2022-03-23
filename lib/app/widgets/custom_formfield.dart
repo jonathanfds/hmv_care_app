@@ -12,6 +12,7 @@ class CustomFormField extends StatelessWidget {
   final TextEditingController controller;
   final int maxLines;
   Function(String)? onSubmitt;
+  double width;
   CustomFormField(
       {Key? key,
       required this.headingText,
@@ -21,6 +22,7 @@ class CustomFormField extends StatelessWidget {
       required this.textInputType,
       required this.textInputAction,
       required this.controller,
+      this.width = 500,
       this.onSubmitt,
       required this.maxLines})
       : super(key: key);
@@ -42,7 +44,7 @@ class CustomFormField extends StatelessWidget {
           ),
         ),
         Container(
-          width: 500,
+          width: width,
           margin: const EdgeInsets.only(left: 20, right: 20),
           decoration: BoxDecoration(
             color: AppColors.grayshade,
