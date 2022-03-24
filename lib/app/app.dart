@@ -7,6 +7,7 @@ import 'package:hmv_care_app/app/modules/home/home_binding.dart';
 import 'package:hmv_care_app/app/modules/home/home_page.dart';
 import 'package:hmv_care_app/app/modules/register/register_page.dart';
 import '/core/theme/app_theme.dart';
+import 'data/providers/graphql_storage_api.dart';
 import 'features/authentication/authentication_state.dart';
 import 'modules/login/login_binding.dart';
 import '../routes/app_pages.dart';

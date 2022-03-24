@@ -2,22 +2,30 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:graphql/client.dart';
+import 'package:hmv_care_app/app/data/providers/graphql_storage_api.dart';
 
 import '../../models/Emergencia.dart';
 import '../../repositories/emergencias_repository.dart';
 
 class EmergenciasGraphQLApi extends IEmergenciasRepository {
-  get _graphQLClient => Get.find<GraphQLClient>();
   @override
   Future<bool> delete(id) {
     // TODO: implement delete
     throw UnimplementedError();
   }
 
+  Future<GraphQLClient> getGraphQLClient() async {
+    if (Get.isRegistered<GraphQLClient>()) {
+      return Get.find<GraphQLClient>();
+    } else {
+      return await GraphQLStorageApi.setupGraphQLClient();
+    }
+  }
+
   @override
   Future<List<Emergencia>> getAll() async {
     String query = r'''query MyQuery {
-                        listEmergencias {
+                        syncEmergencias {
                           items {
                             _deleted
                             _lastChangedAt
@@ -70,10 +78,11 @@ class EmergenciasGraphQLApi extends IEmergenciasRepository {
     final QueryOptions options = QueryOptions(
       document: gql(query),
     );
-    final QueryResult result = await _graphQLClient.query(options);
+    var client = await getGraphQLClient();
+    final QueryResult result = await client.query(options);
 
     if (result.exception == null) {
-      var items = result.data!['listEmergencias']["items"] as List;
+      var items = result.data!['syncEmergencias']["items"] as List;
       items = items.where((t) => t['_deleted'] != true).toList();
       var data = items.map((t) {
         return Emergencia.fromRawJson(t);

@@ -68,9 +68,10 @@ class HospitalTab extends GetView<HomeController> {
                         Expanded(
                             flex: 2,
                             child: SizedBox(
-                              height: 60.h,
+                              height: 65.h,
                               child: Obx(() => ListView(
-                                      children: controller.emergencias.map((t) {
+                                  controller: ScrollController(),
+                                  children: controller.emergencias.map((t) {
                                     var emergencia = t as Emergencia;
                                     var isSelected = emergencia.id ==
                                         controller.selectedEmergencia.id;
@@ -157,7 +158,7 @@ class HospitalTab extends GetView<HomeController> {
                         Expanded(
                             flex: 8,
                             child: SizedBox(
-                                height: 60.h,
+                                height: 65.h,
                                 child: Obx(() {
                                   if (controller.emergencias.isEmpty) {
                                     return Container();

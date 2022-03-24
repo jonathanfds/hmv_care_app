@@ -11,7 +11,7 @@ void main() {
       data_nascimento: '12/05/1960', fumante: true, peso: '80', altura: '1,70');
   SolicitarEmergenciaController controller =
       SolicitarEmergenciaController(EmergenciasAmplify(), paciente);
-  test('Risco Médio', () {
+  test('Risco Médio - (Fumante e Sobrepeso IMC)', () {
     Map<String, String> questionario = {};
 
     questionario[perguntas[1]!] = "NÃO";

@@ -11,8 +11,9 @@ import 'home_controller.dart';
 
 class HomeBinding implements Bindings {
   @override
-  void dependencies() {
+  void dependencies() async {
     if (GetPlatform.isWeb) {
+      GraphQLStorageApi.setupGraphQLClient();
       Get.lazyPut<IPacientesRepository>(() => PacientesGraphQLApi());
       Get.lazyPut<IEmergenciasRepository>(() => EmergenciasGraphQLApi());
     } else {

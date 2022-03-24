@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:gql/language.dart';
 import 'package:graphql/client.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
@@ -11,68 +12,51 @@ import '../models/Pacientes.dart';
 
 class GraphQLStorageApi {
   GraphQLStorageApi();
-  GraphQLClient? _graphQLClient;
-  GraphQLClient get graphQLClient {
-    return _graphQLClient ?? _getGraphQLClient();
-  }
 
-  GraphQLClient _getGraphQLClient() {
-    final HttpLink httpLink = HttpLink(
-        'https://n4gcecaeivatfl6ps6aihijske.appsync-api.us-east-2.amazonaws.com/graphql');
-
+  static Future<GraphQLClient> setupGraphQLClient() async {
+    final HttpLink httpLink = HttpLink(AppConfig.API_GRAPHQL);
     final AuthLink authLink = AuthLink(getToken: () async {
       var token = await Get.find<AuthenticationController>().getToken();
-      return '$token';
+      return token;
     });
-    final Link link = authLink.concat(httpLink);
-    _graphQLClient = GraphQLClient(link: link, cache: GraphQLCache());
-    return _graphQLClient!;
+    Link link = authLink.concat(httpLink);
+    var token = await Get.find<AuthenticationController>().getToken();
+    final authHeader = {
+      "Authorization": token,
+      "host":
+          "${AppConfig.AWS_APP_ID}.appsync-api.${AppConfig.AWS_REGION}.amazonaws.com",
+    };
+    final encodedHeader = base64.encode(utf8.encode(jsonEncode(authHeader)));
+    final _wsLink = WebSocketLink(
+        "${AppConfig.API_GRAPHQL_REALTIME}?header=$encodedHeader&payload=e30=",
+        config: SocketClientConfig(
+          serializer: AppSyncRequest(authHeader: authHeader),
+          inactivityTimeout: const Duration(minutes: 3),
+          autoReconnect: true,
+        ));
+    link = Link.split((request) => request.isSubscription, _wsLink, link);
+    var client = GraphQLClient(
+        link: link, cache: GraphQLCache(), alwaysRebroadcast: true);
+    Get.put(client);
+    return client;
   }
+}
 
-  Future<dynamic> getAll(String tableName) async {
-    try {
-      String fields = "";
-      String queryName = "list$tableName";
-      if (tableName == Pacientes.schema.name) {
-        fields = Pacientes.schema.fields!.keys.join(" ");
-        queryName = "list${Pacientes.schema.pluralName}";
-      } else if (tableName == Emergencia.schema.name) {
-        fields = Emergencia.schema.fields!.keys.join(" ");
-        queryName = "list${Emergencia.schema.pluralName}";
-      }
+class AppSyncRequest extends RequestSerializer {
+  final Map<String, dynamic> authHeader;
 
-      String query =
-          'query GetAll$tableName { $queryName { items { $fields } } }';
+  const AppSyncRequest({
+    required this.authHeader,
+  });
 
-      final QueryOptions options = QueryOptions(
-        document: gql(query),
-      );
-      final QueryResult result = await graphQLClient.query(options);
-
-      if (result.exception == null) {
-        return result.data![queryName]["items"];
-      } else {
-        print('erro -get');
-      }
-    } catch (ex) {
-      print(ex);
-    }
-    return null;
-  }
-
-  Future<dynamic> get(String tableName, String id) async {
-    return null;
-  }
-
-  Future<bool> delete(String tableName, String id) async {
-    return false;
-  }
-
-  Future<bool> update(String tableName, dynamic obj) async {
-    return false;
-  }
-
-  Future<bool> insert(String tableName, dynamic obj) async {
-    return false;
-  }
+  @override
+  Map<String, dynamic> serializeRequest(Request request) => {
+        "data": jsonEncode({
+          "query": printNode(request.operation.document),
+          "variables": request.variables,
+        }),
+        "extensions": {
+          "authorization": authHeader,
+        }
+      };
 }

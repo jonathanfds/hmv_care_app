@@ -114,11 +114,11 @@ class SolicitarEmergenciaController extends GetxController {
     }
     EmergenciaSeveridadeEnum risco = EmergenciaSeveridadeEnum.LEVE;
     int countSim = questionario.values.where((t) => t == "SIM").length;
-    if (countSim >= 3) {
+    if (countSim > 3) {
       risco = EmergenciaSeveridadeEnum.GRAVE;
-    } else if (countSim > 3 && pontos > 10) {
+    } else if (countSim >= 3 && pontos > 10) {
       risco = EmergenciaSeveridadeEnum.GRAVE;
-    } else if (countSim > 1 || (pontos <= 10 || pontos > 4)) {
+    } else if (countSim > 1 || (pontos > 4 && pontos <= 10)) {
       risco = EmergenciaSeveridadeEnum.MEDIO;
     }
     return risco;

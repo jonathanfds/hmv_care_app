@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -93,14 +94,5 @@ _configureAmplify() async {
     } catch (e) {
       print(e);
     }
-  } else {
-    final HttpLink httpLink = HttpLink(AppConfig.API_GRAPHQL);
-
-    final AuthLink authLink = AuthLink(getToken: () async {
-      var token = await Get.find<AuthenticationController>().getToken();
-      return token;
-    });
-    final Link link = authLink.concat(httpLink);
-    Get.lazyPut(() => GraphQLClient(link: link, cache: GraphQLCache()));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:get/get.dart';
+import 'package:graphql/client.dart';
 import 'package:hmv_care_app/app/data/models/ModelProvider.dart';
 import 'package:hmv_care_app/app/data/repositories/pacientes_repository.dart';
 import 'package:hmv_care_app/app/features/authentication/authentication_controller.dart';
@@ -27,7 +28,7 @@ class HomeController extends GetxController {
   get selectedEmergenciaIdx => _selectedEmergenciaIdx.value;
 
   Emergencia get selectedEmergencia => allEmergencias[selectedEmergenciaIdx];
-
+  bool isSubscribed = false;
   @override
   void onInit() async {
     super.onInit();
@@ -53,8 +54,68 @@ class HomeController extends GetxController {
       allEmergencias.sort(emergenciaCompareByDate);
       selectedEmergenciaIdx = 0;
       emergencias.value = allEmergencias;
+
+      if (!isSubscribed) {
+        subscribe();
+        isSubscribed = true;
+      }
+      emergencias.refresh();
     }
     loading = false;
+  }
+
+  subscribe() {
+    //Mover para provider
+    var client = Get.find<GraphQLClient>();
+    final subscriptionDocument = gql(
+      r'''
+    subscription mysubs {
+                        onCreateEmergencia {                          
+                            _deleted
+                            _lastChangedAt
+                            _version
+                            createdAt
+                            data
+                            emergenciaPacienteId
+                            id
+                            localizacao
+                            owner                            
+                            questionario {
+                              resposta
+                              pergunta
+                            }
+                            severidade
+                            status
+                            updatedAt
+                          }
+                        }
+                      
+  ''',
+    );
+    var subscription = client.subscribe(
+      SubscriptionOptions(
+        document: subscriptionDocument,
+      ),
+    );
+    subscription.listen((event) async {
+      if (!event.hasException) {
+        print('NOVA EMERGENCIA ADICIONADA !');
+        var item = event.data!["onCreateEmergencia"];
+        var emergencia = Emergencia.fromRawJson(item);
+
+        var paciente = await _pacientesRepository
+            .getById(emergencia.emergenciaPacienteId!);
+        if (paciente != null) {
+          emergencia = emergencia.copyWith(paciente: paciente);
+          allEmergencias.add(emergencia);
+          allEmergencias.sort(emergenciaCompareByDate);
+          emergencias.value = allEmergencias;
+          emergencias.refresh();
+        }
+      } else {
+        print('ERRO SUBSCRIPTION');
+      }
+    });
   }
 
   int emergenciaCompareByDate(Emergencia a, Emergencia b) {

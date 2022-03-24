@@ -54,6 +54,7 @@ dependencies:
   graphql: ^5.0.1
   maps_launcher: ^2.0.1
   url_launcher: ^6.0.20
+  gql: ^0.13.0
 
 dev_dependencies:
   flutter_test:

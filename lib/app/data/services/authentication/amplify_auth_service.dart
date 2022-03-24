@@ -63,6 +63,7 @@ class AmplifyAuthService extends GetxService implements IAuthenticationService {
 
   @override
   Future logoutUser() async {
+    await Amplify.DataStore.clear();
     await Amplify.Auth.signOut();
   }
 
