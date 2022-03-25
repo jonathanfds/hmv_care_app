@@ -163,8 +163,9 @@ class HospitalTab extends GetView<HomeController> {
                                   if (controller.emergencias.isEmpty) {
                                     return Container();
                                   }
-                                  var paciente =
-                                      controller.selectedEmergencia.paciente!;
+                                  var emergencia = controller.allEmergencias[
+                                      controller.selectedEmergenciaIdx];
+                                  var paciente = emergencia.paciente!;
                                   return controller.selectedEmergenciaIdx >= 0
                                       ? Card(
                                           elevation: 5,

@@ -100,6 +100,8 @@ class HomeController extends GetxController {
     subscription.listen((event) async {
       if (!event.hasException) {
         print('NOVA EMERGENCIA ADICIONADA !');
+        await loadEmergencias();
+        /*
         var item = event.data!["onCreateEmergencia"];
         var emergencia = Emergencia.fromRawJson(item);
 
@@ -111,7 +113,8 @@ class HomeController extends GetxController {
           allEmergencias.sort(emergenciaCompareByDate);
           emergencias.value = allEmergencias;
           emergencias.refresh();
-        }
+          selectedEmergenciaIdx = 0;
+        }*/
       } else {
         print('ERRO SUBSCRIPTION');
       }

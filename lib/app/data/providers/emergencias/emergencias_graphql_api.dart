@@ -87,7 +87,14 @@ class EmergenciasGraphQLApi extends IEmergenciasRepository {
       var data = items.map((t) {
         return Emergencia.fromRawJson(t);
       });
-      return List<Emergencia>.from(data);
+      var list = List<Emergencia>.from(data);
+      var dateNow = DateTime.now().toUtc();
+      return list
+          .where((t) =>
+              t.createdAt != null &&
+              t.createdAt!.getDateTimeInUtc().day == dateNow.day &&
+              dateNow.month == t.createdAt!.getDateTimeInUtc().month)
+          .toList();
     }
     return [];
   }

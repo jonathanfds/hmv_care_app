@@ -17,8 +17,8 @@ void main() {
     questionario[perguntas[1]!] = "NÃO";
     questionario[perguntas[2]!] = "NÃO";
     questionario[perguntas[3]!] = "NÃO";
-    questionario[perguntas[4]!] = "NÃO";
-    questionario[perguntas[5]!] = "NÃO";
+    questionario[perguntas[4]!] = "SIM";
+    questionario[perguntas[5]!] = "SIM";
     questionario[perguntas[6]!] = "NÃO";
     var risco = controller.calcularRisco(questionario);
     expect(risco, EmergenciaSeveridadeEnum.MEDIO);
